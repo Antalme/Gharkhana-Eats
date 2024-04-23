@@ -34,8 +34,10 @@ app.get('/registro', function (req, res) {
 // ----------- API REST ------------
 // ---------------------------------
 
-app.post('/addPlato', function (req, res) {
-    const plato = new Plato({
+app.post('/registro', function (req, res) {
+    console.log(res.query.usuario);
+
+    /*const plato = new Plato({
         nombre: "plato 1",
         categoria: "ensalada",
         ingredientes: "tomate, lechuga, pepino..."
@@ -45,7 +47,7 @@ app.post('/addPlato', function (req, res) {
         res.send(result)
     }).catch((error) => {
         console.log(error)
-    })
+    })*/
 })
 
 app.get('/platos', function (req, res) {

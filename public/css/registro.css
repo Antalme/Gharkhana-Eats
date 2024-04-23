@@ -12,7 +12,17 @@ html, body {
 }
 
 .titulo {
-    font-size: 28px;
+    font-size: 26px;
     color: var(--color-primario);
     font-weight: bold;
+}
+
+.form-control {
+    height: 50px;
+    padding: 10px 15px;
+}
+
+.btn {
+    height: 50px;
+    padding: 10px 15px;
 }
