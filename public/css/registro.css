@@ -26,3 +26,20 @@ html, body {
     height: 50px;
     padding: 10px 15px;
 }
+
+.mensaje-flotante {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 15px;
+    border-radius: 5px;
+    display: none; /* Ocultar el mensaje por defecto */
+    z-index: 1000;
+}
+
+.mensaje-flotante.mostrar {
+    display: block; /* Mostrar el mensaje */
+}

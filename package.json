@@ -3,7 +3,8 @@
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "mongodb": "^6.5.0",
-    "mongoose": "^8.3.2"
+    "mongoose": "^8.3.2",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
