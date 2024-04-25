@@ -35,13 +35,41 @@ app.get('/', function (req, res) {
     res.render("index.ejs")
 })
 
+app.get('/login', function (req, res) {
+    res.render("login.ejs")
+})
+
 app.get('/registro', function (req, res) {
     res.render("registro.ejs")
+})
+
+app.get('/perfil', function (req, res) {
+    res.render("perfil.ejs")
 })
 
 // ---------------------------------
 // ----------- API REST ------------
 // ---------------------------------
+
+//Maneja los inicios de sesión.
+app.post('/login', function (req, res) {
+    const username = req.body.usuario;
+    const pass = req.body.pass;
+
+    // Buscar el usuario en MongoDB
+    Usuario.findOne({ $or: [{ nombre: username }, { pass: pass }] }).then((usuarioExistente) => {
+        if (usuarioExistente) {
+            res.send({
+                titulo: "La abuelita te saluda",
+                mensaje: "¡Bienvenido a Gharkhana Eats!",
+                tipo: "success"
+            })
+        }
+    }).catch((error) => {
+        console.log(error);
+        res.send("ERROR");
+    });
+});
 
 //Maneja los registros.
 app.post('/registro', function (req, res) {
@@ -59,7 +87,11 @@ app.post('/registro', function (req, res) {
 
     Usuario.findOne({ $or: [{ nombre: username }, { email: email }] }).then((usuarioExistente) => {
         if (usuarioExistente) {
-            res.status(400).send("El usuario o el email ya han sido utilizados.");
+            res.send({
+                titulo: "¡Aviso!",
+                mensaje: "El nombre de usuario o el email que estás utilizando ya está en uso. ¡Prueba con otros diferentes!",
+                tipo: "warning"
+            })
         } else {
             const nuevoUsuario = new Usuario({
                 nombre: username,
@@ -68,11 +100,18 @@ app.post('/registro', function (req, res) {
             });
 
             nuevoUsuario.save().then((result) => {
-                //res.render("perfil.ejs");
-                res.status(200).send("Usuario registrado correctamente.");
+                res.send({
+                    titulo: "¡Registro éxito!",
+                    mensaje: "Tu cuenta se ha registrado con correctamete. Ahora puedes iniciar sesión",
+                    tipo: "success"
+                })
             }).catch((error) => {
                 console.log(error);
-                res.status(400).send("Ha ocurrido un error inesperado: " + error)
+                res.send({
+                    titulo: "¡Registro fallido!",
+                    mensaje: "Ha habido un error a la hora de registrar tu cuenta. Inténtalo de nuevo más tarde",
+                    tipo: "error"
+                });
             });
         }
     }).catch((error) => {

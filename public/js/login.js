@@ -4,20 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
 
         $.ajax({
-            url: '/registro',
+            url: '/login',
             method: 'POST',
             data: {
                 usuario: $("#usuario").val(),
-                email: $("#email").val(),
                 pass: $("#pass").val()
             },
             success: function (data) {
+                alert("asdasdasd")
                 mostrarMensaje(data)
             },
             error: function (error) {
                 console.error(error)
                 mostrarMensaje(error.responseText)
             }
-        })
-    })
+        });
+    });
 });
