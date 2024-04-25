@@ -1,4 +1,5 @@
 const express = require("express")
+const session = require("express-session")
 const mongoose = require("mongoose")
 const path = require("path")
 const favicon = require('serve-favicon')
@@ -25,6 +26,14 @@ mongoose.connect(DB_URI).then((result) => {
     })
 }).catch((error) => {
     console.log("Error: " + error)
+})
+
+app.use({
+    secret: 'secretooo',
+    cookie: {
+        maxAge: 30000
+    },
+    saveUnitialized: false
 })
 
 // ---------------------------------
@@ -57,12 +66,18 @@ app.post('/login', function (req, res) {
     const pass = req.body.pass;
 
     // Buscar el usuario en MongoDB
-    Usuario.findOne({ $or: [{ nombre: username }, { pass: pass }] }).then((usuarioExistente) => {
+    Usuario.findOne({ $and: [{ nombre: username }, { pass: pass }] }).then((usuarioExistente) => {
         if (usuarioExistente) {
             res.send({
                 titulo: "La abuelita te saluda",
                 mensaje: "¡Bienvenido a Gharkhana Eats!",
                 tipo: "success"
+            })
+        } else {
+            res.send({
+                titulo: "Usuario no encontrado",
+                mensaje: "El nombre de usuario introducido no existe. Revisa los datos e inténtalo de nuevo.",
+                tipo: "warning"
             })
         }
     }).catch((error) => {

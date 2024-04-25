@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 pass: $("#pass").val()
             },
             success: function (data) {
-                alert("asdasdasd")
                 mostrarMensaje(data)
             },
             error: function (error) {
