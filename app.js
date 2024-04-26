@@ -1,6 +1,7 @@
 const express = require("express")
 const session = require("express-session")
 const mongoose = require("mongoose")
+const MongoDBSession = require("connect-mongodb-session")(session)
 const path = require("path")
 const favicon = require('serve-favicon')
 const app = express();
@@ -28,19 +29,27 @@ mongoose.connect(DB_URI).then((result) => {
     console.log("Error: " + error)
 })
 
-app.use({
+const store = new MongoDBSession({
+    uri: DB_URI,
+    collection: "mySessions"
+})
+
+app.use(session({
     secret: 'secretooo',
+    resave: true,
+    saveUnitialized: false,
+    store: store,
     cookie: {
         maxAge: 30000
-    },
-    saveUnitialized: false
-})
+    }
+}))
 
 // ---------------------------------
 // ------------- VIEWS -------------
 // ---------------------------------
 
 app.get('/', function (req, res) {
+    req.session.isAuth = true
     res.render("index.ejs")
 })
 
