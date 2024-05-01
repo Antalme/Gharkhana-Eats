@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 pass: $("#pass").val()
             },
             success: function (data) {
-                mostrarMensaje(data)
+                window.location.href = "/perfil"
             },
             error: function (error) {
                 console.error(error)

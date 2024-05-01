@@ -1,0 +1,34 @@
+<%- include('head') %>
+    <link href="css/platos.css" rel="stylesheet">
+
+    <body>
+        <%- include('cabecera') %>
+
+            <div class="cuerpo">
+                <h2>¡Explora nuestros platos únicos!</h2>
+                <hr>
+                <div id="platos">
+                    <div id="cargando">
+                        <img src="/images/gif_cargando.gif" width="25%" />
+                        <p>Cargando...</p>
+                    </div>
+
+                    <!--
+                    <div id="platos">
+                        <div class="plato">
+                            <div class="foto">FOTO</div>
+                            <div class="datos">
+                                <div class="titulo">Título</div>
+                                <div class="ingredientes">Ingredientes</div>
+                                <div class="desc">Descripcion</div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+    </body>
+
+    <script src="js/platos.js" defer></script>
+
+    <%- include('footer') %>

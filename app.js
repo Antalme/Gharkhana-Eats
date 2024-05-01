@@ -31,7 +31,7 @@ mongoose.connect(DB_URI).then((result) => {
 
 const store = new MongoDBSession({
     uri: DB_URI,
-    collection: "mySessions"
+    collection: "sesiones"
 })
 
 app.use(session({
@@ -44,18 +44,41 @@ app.use(session({
     }
 }))
 
+const isAuth = (req, res, next) => {
+    if (req.session.isAuth) {
+        next()
+    } else {
+        res.redirect("/login")
+    }
+}
+
 // ---------------------------------
 // ------------- VIEWS -------------
 // ---------------------------------
 
+app.use(function (req, res, next) {
+    res.locals.session = req.session;
+    next();
+});
+
 app.get('/', function (req, res) {
-    req.session.isAuth = true
     res.render("index.ejs")
+})
+
+app.get('perfil', function (req, res) {
+    res.render("perfil.ejs")
 })
 
 app.get('/login', function (req, res) {
     res.render("login.ejs")
 })
+
+app.get('/logout', function (req, res) {
+    req.session.destroy((err) => {
+        if (err) throw err
+        res.redirect("/")
+    });
+});
 
 app.get('/registro', function (req, res) {
     res.render("registro.ejs")
@@ -63,6 +86,26 @@ app.get('/registro', function (req, res) {
 
 app.get('/perfil', function (req, res) {
     res.render("perfil.ejs")
+})
+
+app.get('/platos', function (req, res) {
+    res.render("platos.ejs")
+})
+
+app.get('/planes', function (req, res) {
+    res.render("planes.ejs")
+})
+
+app.get('/calendario', function (req, res) {
+    res.render("calendario.ejs")
+})
+
+app.get('/acercade', function (req, res) {
+    res.render("acercade.ejs")
+})
+
+app.get('/administracion', function (req, res) {
+    res.render("administracion.ejs")
 })
 
 // ---------------------------------
@@ -77,6 +120,8 @@ app.post('/login', function (req, res) {
     // Buscar el usuario en MongoDB
     Usuario.findOne({ $and: [{ nombre: username }, { pass: pass }] }).then((usuarioExistente) => {
         if (usuarioExistente) {
+            req.session.isAuth = true
+            req.session.username = username;
             res.send({
                 titulo: "La abuelita te saluda",
                 mensaje: "¡Bienvenido a Gharkhana Eats!",
@@ -144,7 +189,9 @@ app.post('/registro', function (req, res) {
     });
 })
 
-app.get('/platos', function (req, res) {
+
+// Platos
+app.get('/obtener-platos', function (req, res) {
     Plato.find().then((resultado) => {
         res.send(resultado)
     }).catch((error) => {
@@ -152,10 +199,29 @@ app.get('/platos', function (req, res) {
     })
 })
 
-app.get('/plato', function (req, res) {
+app.get('/obtener-plato', function (req, res) {
     Plato.findById("662626b0a018fb0bdd33b33f").then((resultado) => {
         res.send(resultado)
     }).catch((error) => {
         console.log("Error: " + error)
     })
+})
+
+app.post('/guardar-plato', function (req, res) {
+    const { nombre, categoria, descripcion, ingredientes } = req.body;
+
+    const nuevoPlato = new Plato({
+        nombre: nombre,
+        descripcion: descripcion,
+        categoria: categoria,
+        ingredientes: ingredientes
+    });
+
+    nuevoPlato.save()
+        .then(platoGuardado => {
+            res.status(201).json({ mensaje: 'Plato creado exitosamente', plato: platoGuardado });
+        })
+        .catch(error => {
+            res.status(500).json({ mensaje: 'Error al crear el plato' });
+        });
 })

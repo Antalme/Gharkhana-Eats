@@ -1,16 +1,3 @@
-html, body {
-    font-family: "Arial", sans-serif;
-    height: 100%;
-    width: 100%;
-}
-
-.cuerpo {
-    width: 100%;
-    height: 100%;
-    padding-top: 30px;
-    background-color: var(--color-fondoPrimario);
-}
-
 .titulo {
     font-size: 26px;
     color: var(--color-primario);

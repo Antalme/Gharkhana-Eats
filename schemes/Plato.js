@@ -5,7 +5,7 @@ const platoSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    categoria: {
+    descripcion: {
         type: String,
         require: true
     },
@@ -13,6 +13,10 @@ const platoSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    categoria: {
+        type: String,
+        require: true
+    }
 }, { timestamps: true })
 
 const Plato = mongoose.model("Plato", platoSchema)

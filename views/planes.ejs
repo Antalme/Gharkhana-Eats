@@ -1,0 +1,26 @@
+<%- include('head') %>
+    <link href="css/perfil.css" rel="stylesheet">
+
+    <body>
+        <%- include('cabecera') %>
+
+        <div class="cuerpo">
+            <h2>¡Hola <%= session.username %>!</h2>
+            <hr>
+            <h3>Infórmate sobre nuestros planes de suscripción:</h2>
+            <div class="planes">
+                <div class="plan">80€ / mes</div>
+                <div class="plan">120€ / mes</div>
+                <div class="plan">220€ / mes</div>
+            </div>
+            <hr>
+            <h3>Infórmate sobre nuestros planes de suscripción:</h2>
+            <div class="planes">
+                <div class="plan">80€/mes</div>
+                <div class="plan">120€/mes</div>
+                <div class="plan">220€/mes</div>
+            </div>
+        </div>
+    </body>
+
+    <%- include('footer') %>

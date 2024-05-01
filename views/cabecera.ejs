@@ -1,11 +1,19 @@
 <link href="css/cabecera.css" rel="stylesheet">
 
 <div class="barraSuperior">
-    <!-- Contenido de la barra -->
     <div class="enlaces">
-        <a href="/">Inicio</a>
-        <a href="/login">Iniciar sesión</a>
-        <a href="/registro">Registrarse</a>
+        <a href="/">HOME</a>
+        <a href="/platos">Nuestros platos</a>
+        <a href="/planes">Planes</a>
+        <% if (session.isAuth) { %>
+            <a href="/perfil">Perfil</a>
+            <a href="/calendario">Calendario</a>
+            <a href="/logout">Cerrar sesión</a>
+        <% } else { %>
+            <a href="/login">Iniciar sesión</a>
+            <a href="/registro">Registrarse</a>
+        <% } %>
         <a href="/acercade">Acerca de</a>
+        <a href="/administracion">ADMINISTRACION</a>
     </div>
 </div>

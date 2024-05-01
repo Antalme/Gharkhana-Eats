@@ -1,0 +1,40 @@
+#cargando {
+    text-align: center;
+}
+
+.plato{
+    width: 100%;
+    height: 200px;
+    background-color: var(--color-fondoSecundario);
+
+    margin-bottom: 30px;
+}
+
+.foto{
+    width: 200px;
+    height: 100%;
+    float: left;
+}
+
+.datos{
+    width: calc(100% - 200px);
+    height: 100%;
+    float: left;
+
+    padding: 15px;
+}
+
+.titulo{
+    width: 100%;
+    height: 15%;
+}
+
+.ingredientes{
+    width: 100%;
+    height: 15%;
+}
+
+.desc{
+    width: 100%;
+    height: 70%;
+}

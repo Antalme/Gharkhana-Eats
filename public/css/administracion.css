@@ -1,0 +1,57 @@
+/* AREA GESTIÓN DE PLATOS */
+
+#gestionPlatos {
+    width: 100%;
+    height: 300px;
+}
+
+#listaPlatos {
+    width: 25%;
+    height: 100%;
+    float: left;
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+#datosPlatos {
+    width: 75%;
+    height: 100%;
+    float: left;
+    padding: 10px;
+}
+
+.contenedorImagen {
+    height: 100%;
+    width: 55%;
+    float: left;
+}
+
+.contenedorDatos{
+    height: 100%;
+    width: 45%;
+    float: left;
+}
+
+.platoImagen {
+    max-width: 100%;
+    height: 100%;
+}
+
+.platoDato {
+    margin-bottom: 5px;
+}
+
+.plato {
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: var(--color-fondoSecundario);
+}
+
+.btn {
+    margin-right: 5px;
+
+    background-color: var(--color-primario);
+    font-weight: bold;
+    color: var(--color-fondoSecundario);
+}
