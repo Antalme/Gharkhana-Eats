@@ -12,10 +12,6 @@ const platoSchema = new mongoose.Schema({
     ingredientes: {
         type: String,
         require: true
-    },
-    categoria: {
-        type: String,
-        require: true
     }
 }, { timestamps: true })
 

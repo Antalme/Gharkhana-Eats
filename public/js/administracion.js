@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
             url: '/guardar-plato',
             method: 'POST',
             data: {
-                usuario: $("#usuario").val(),
-                email: $("#email").val(),
-                pass: $("#pass").val()
+                nombrePlato: $("#nombrePlato").val(),
+                ingredientesPlato: $("#ingredientesPlato").val(),
+                descripcionPlato: $("#descripcionPlato").val()
             },
             success: function (data) {
                 mostrarMensaje(data)

@@ -208,20 +208,28 @@ app.get('/obtener-plato', function (req, res) {
 })
 
 app.post('/guardar-plato', function (req, res) {
-    const { nombre, categoria, descripcion, ingredientes } = req.body;
+    const { nombre, descripcion, ingredientes } = req.body;
 
     const nuevoPlato = new Plato({
         nombre: nombre,
         descripcion: descripcion,
-        categoria: categoria,
         ingredientes: ingredientes
     });
 
     nuevoPlato.save()
         .then(platoGuardado => {
-            res.status(201).json({ mensaje: 'Plato creado exitosamente', plato: platoGuardado });
+            console.log(platoGuardado)
+            res.send({
+                titulo: "¡Plato guardaro!",
+                mensaje: "El plato se ha guardado con éxito.",
+                tipo: "success"
+            });
         })
         .catch(error => {
-            res.status(500).json({ mensaje: 'Error al crear el plato' });
+            res.send({
+                titulo: "¡Error!",
+                mensaje: "El plato no se ha podido guardar:\n" + error,
+                tipo: "error"
+            });
         });
 })
