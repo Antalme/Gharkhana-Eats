@@ -12,6 +12,10 @@ const platoSchema = new mongoose.Schema({
     ingredientes: {
         type: String,
         require: true
+    },
+    imagen: {
+        data: Buffer,
+        contentType: String
     }
 }, { timestamps: true })
 

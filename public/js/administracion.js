@@ -1,61 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
-    $.ajax({
-        url: "/obtener-platos",
-        method: "GET",
-        success: function (response) {
-            $('#platos').empty()
+    cargarListaPlatos()
 
-            response.forEach(function (plato) {
-                console.log(plato)
-                const divPlato = `
-                <div class="plato">
-                    ${plato.nombre}
-                </div>
-                `
-
-                $('#listaPlatos').append(divPlato)
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error("Error: :", status, error)
-        }
+    $("#limpiarPlato").click(function () {
+        limpiarCamposPlato()
     })
 
     $("#guardarPlato").click(function () {
-        // Comprobación de datos incorrectos.
-        if ($("#nombrePlato").val() == "") {
-            mostrarMensaje({ titulo: "Nombre no introducido", mensaje: "El plato debe tener un nombre", tipo: "warning" });
-            return
-        }
-        if ($("#descripcionPlato").val() == "") {
-            mostrarMensaje({ titulo: "Descripción no introducida", mensaje: "El plato debe tener una descripción", tipo: "warning" });
-            return
-        }
-        if ($("#ingredientesPlato").val() == "") {
-            mostrarMensaje({ titulo: "Ingredientes no introducidos", mensaje: "Se debe especificar los ingredientes que lleva el plato", tipo: "warning" });
-            return
-        }
-
-        $.ajax({
-            url: '/guardar-plato',
-            method: 'POST',
-            data: {
-                nombrePlato: $("#nombrePlato").val(),
-                ingredientesPlato: $("#ingredientesPlato").val(),
-                descripcionPlato: $("#descripcionPlato").val()
-            },
-            success: function (data) {
-                mostrarMensaje(data)
-            },
-            error: function (error) {
-                console.error(error)
-                mostrarMensaje(error.responseText)
-            }
-        })
+        guardarPlato()
     })
 
-    //Al pulsar, simula que se ha hecho click en un botón tipo fileinput para que
-    //se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
+    $("#eliminarPlato").click(function () {
+        eliminarPlato()
+    })
+
+    //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
+    //para que se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
     $("#cargarFotoPlato").click(function () {
         $("#archivoInput").click();
     })
@@ -63,13 +22,127 @@ document.addEventListener('DOMContentLoaded', function () {
         var archivo = event.target.files[0];
         // Verificar si se seleccionó un archivo
         if (archivo) {
-            // Crear un objeto URL para la imagen seleccionada
+            //Crear un objeto URL para la imagen seleccionada
             var urlImagen = URL.createObjectURL(archivo);
-            // Actualizar el atributo src del elemento img
+            //Actualizar el atributo src del elemento img
             document.getElementById('imagenPlato').src = urlImagen;
         } else {
-            // Si no se seleccionó un archivo, restaurar la imagen de marcador de posición
-            document.getElementById('imagenPlato').src = "/images/placeholder.png";
+            //Si no se seleccionó un archivo, restaura la imagen de marcador de posición
+            //document.getElementById('imagenPlato').src = "/images/placeholder.png";
+            $("#archivoInput").attr('src', imagenUrl);
         }
     })
 })
+
+/*
+Hace una petición AJAX para cargar y poblar la lista de platos 
+con todos los platos que existen en la base de datos.
+*/
+function cargarListaPlatos() {
+    $.ajax({
+        url: "/obtener-platos",
+        method: "GET",
+        success: function (response) {
+            $('#listaPlatos').empty()
+
+            response.forEach(function (plato, index) {
+                const divPlato = `
+                <div id="plato_${index}" class="plato">
+                    ${plato.nombre}
+                </div>
+                `
+
+                $('#listaPlatos').append(divPlato)
+
+                $(`#plato_${index}`).click(function () {
+                    cargarDatosPlato(plato)
+                });
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error: :", status, error)
+        }
+    })
+}
+
+function limpiarCamposPlato() {
+    $("#idPlato").val("")
+    $("#nombrePlato").val("")
+    $("#ingredientesPlato").val("")
+    $("#descripcionPlato").val("")
+    $("#imagenPlato").attr('src', "");
+    $("#archivoInput").val("");
+}
+
+function cargarDatosPlato(plato) {
+    $("#idPlato").val(plato._id)
+    $("#nombrePlato").val(plato.nombre)
+    $("#ingredientesPlato").val(plato.ingredientes)
+    $("#descripcionPlato").val(plato.descripcion)
+
+    var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
+    $("#imagenPlato").attr('src', imagenUrl)
+}
+
+//Guardar o edita el plato dependiendo de si el campo ID tiene algo escrito.
+function guardarPlato() {
+    // Comprobación de datos incorrectos.
+    if ($("#nombrePlato").val() == "") {
+        mostrarMensaje({ titulo: "Nombre no introducido", mensaje: "El plato debe tener un nombre", tipo: "warning" });
+        return
+    }
+    if ($("#descripcionPlato").val() == "") {
+        mostrarMensaje({ titulo: "Descripción no introducida", mensaje: "El plato debe tener una descripción", tipo: "warning" });
+        return
+    }
+    if ($("#ingredientesPlato").val() == "") {
+        mostrarMensaje({ titulo: "Ingredientes no introducidos", mensaje: "Se debe especificar los ingredientes que lleva el plato", tipo: "warning" });
+        return
+    }
+    if ($("#archivoInput").val() == "") {
+        mostrarMensaje({ titulo: "Foto no cargada", mensaje: "Se debe cargar una imagen que represente al plato", tipo: "warning" });
+        return
+    }
+
+    var formData = new FormData();
+    var archivo = $('#archivoInput').get(0).files[0];
+
+    formData.append('idPlato', $("#idPlato").val());
+    formData.append('nombrePlato', $("#nombrePlato").val());
+    formData.append('ingredientesPlato', $("#ingredientesPlato").val());
+    formData.append('descripcionPlato', $("#descripcionPlato").val());
+    formData.append('imagen', archivo);
+
+    $.ajax({
+        url: '/guardar-plato',
+        method: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false, //Evita que jQuery procese los datos
+        success: function (data) {
+            mostrarMensaje(data)
+        },
+        error: function (error) {
+            console.error(error)
+            mostrarMensaje(error.responseText)
+        }
+    })
+}
+
+//Elimina el plato de la base de datos utilizando su ID.
+function eliminarPlato(idPlato) {
+    $.ajax({
+        url: '/eliminar-plato',
+        method: 'POST',
+        data: {
+            idPlato: $("#idPlato").val(),
+        },
+        success: function (data) {
+            mostrarMensaje(data)
+        },
+        error: function (error) {
+            console.error(error)
+            mostrarMensaje(error.responseText)
+        }
+    })
+}

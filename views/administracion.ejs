@@ -14,13 +14,18 @@
                 <p>Añade, modifica o elimina un plato.</p>
                 <div id="gestionPlatos">
                     <div id="listaPlatos">
-
+                        <div id="cargando">
+                            <img src="/images/gif_cargando.gif" width="50%" />
+                            <p>Cargando...</p>
+                        </div>
                     </div>
                     <div id="datosPlatos">
                         <div class="contenedorImagen">
-                            <img class="platoImagen" id="imagenPlato" src="/images/placeholder.png" />
+                            <img class="platoImagen" id="imagenPlato" src="" />
                         </div>
                         <div class="contenedorDatos">
+                            <input type="text" class="form-control platoDato" id="idPlato" name="idPlato"
+                            placeholder="Id del plato" disabled>
                             <input type="text" class="form-control platoDato" id="nombrePlato" name="nombrePlato"
                                 placeholder="Nombre del plato" required>
                             <textarea class="form-control platoDato" id="descripcionPlato" name="descripcionPlato"
@@ -41,9 +46,6 @@
                         </div>
                     </div>
                 </div>
-                <br>
-                <h3>Gestión de planes</h3>
-                <hr>
                 <br>
                 <h3>Gestión de usuarios</h4>
                     <hr>

@@ -1,0 +1,21 @@
+.menuDia {
+    width: 100%;
+    background-color: var(--color-fondoSecundario);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.fecha {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.hora {
+    width: 100%;
+    padding-left: 25px;
+}
+
+.comida {
+    width: 100%;
+    padding-left: 50px;
+}

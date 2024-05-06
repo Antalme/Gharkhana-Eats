@@ -1,7 +1,11 @@
+//Importación de módulos
+const { Worker } = require('worker_threads')
+const worker = new Worker('./worker.js')
 const express = require("express")
 const session = require("express-session")
 const mongoose = require("mongoose")
 const MongoDBSession = require("connect-mongodb-session")(session)
+const multer = require('multer');
 const path = require("path")
 const favicon = require('serve-favicon')
 const app = express();
@@ -17,6 +21,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(__dirname, 'favicon.ico'))); //Favicon
 app.use(express.static('public'));
 app.set("view engine", "ejs");
+
+//Maneja los mensajes enviados desde el worker
+worker.on('message', (message) => {
+    console.log('Mensaje del worker:', message);
+});
+
+//Maneja los errores del worker
+worker.on('error', (error) => {
+    console.error('Error en el worker:', error);
+});
+
+//Configura multer para manejar la carga de archivos
+const storage = multer.memoryStorage(); //Almacena la imagen en memoria
+const upload = multer({ storage: storage });
 
 //Conexión con la base de datos de MongoDB
 mongoose.connect(DB_URI).then((result) => {
@@ -184,11 +202,10 @@ app.post('/registro', function (req, res) {
             });
         }
     }).catch((error) => {
-        console.log(error);
-        res.send("ERROR");
+        console.log(error)
+        res.send("ERROR")
     });
 })
-
 
 // Platos
 app.get('/obtener-platos', function (req, res) {
@@ -207,28 +224,92 @@ app.get('/obtener-plato', function (req, res) {
     })
 })
 
-app.post('/guardar-plato', function (req, res) {
-    const { nombre, descripcion, ingredientes } = req.body;
+app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
+    const { idPlato, nombrePlato, ingredientesPlato, descripcionPlato } = req.body;
 
-    const nuevoPlato = new Plato({
-        nombre: nombre,
-        descripcion: descripcion,
-        ingredientes: ingredientes
-    });
+    //Convierte la imagen a un Buffer y obtiene su tipo de contenido
+    const imagenData = req.file.buffer;
+    const contentType = req.file.mimetype;
 
-    nuevoPlato.save()
-        .then(platoGuardado => {
-            console.log(platoGuardado)
-            res.send({
-                titulo: "¡Plato guardaro!",
-                mensaje: "El plato se ha guardado con éxito.",
-                tipo: "success"
+    //Si tiene ID, hay que actualizar los datos del plato
+    if (idPlato) {
+        // Encontrar el plato existente en la base de datos
+        Plato.findById(idPlato)
+            .then(platoExistente => {
+                platoExistente.nombre = nombrePlato;
+                platoExistente.descripcion = descripcionPlato;
+                platoExistente.ingredientes = ingredientesPlato;
+                platoExistente.imagen.data = req.file.buffer;
+                platoExistente.imagen.contentType = req.file.mimetype;
+
+                return platoExistente.save();
+            })
+            .then(platoActualizado => {
+                res.send({
+                    titulo: "¡Plato actualizado!",
+                    mensaje: "El plato se ha actualizado con éxito.",
+                    tipo: "success"
+                });
+            })
+            .catch(error => {
+                res.send({
+                    titulo: "¡Error!",
+                    mensaje: "El plato no se ha podido actualizar:\n" + error,
+                    tipo: "error"
+                });
             });
+    } else {
+        const nuevoPlato = new Plato({
+            nombre: nombrePlato,
+            descripcion: descripcionPlato,
+            ingredientes: ingredientesPlato,
+            imagen: {
+                data: imagenData,
+                contentType: contentType
+            }
+        });
+
+        nuevoPlato.save()
+            .then(platoGuardado => {
+                res.send({
+                    titulo: "¡Plato guardado!",
+                    mensaje: "El plato se ha guardado con éxito.",
+                    tipo: "success"
+                });
+            })
+            .catch(error => {
+                res.send({
+                    titulo: "¡Error!",
+                    mensaje: "El plato no se ha podido guardar:\n" + error,
+                    tipo: "error"
+                });
+            });
+    }
+});
+
+app.post('/eliminar-plato', function (req, res) {
+    const { idPlato } = req.body
+
+    Plato.deleteOne({ _id: idPlato })
+        .then(result => {
+            if (result.deletedCount === 1) {
+                res.send({
+                    titulo: "Plato eliminado",
+                    mensaje: "El plato se ha eliminado correctamente.",
+                    tipo: "success"
+                });
+            } else {
+                res.send({
+                    titulo: "Error al eliminar",
+                    mensaje: "No se encontró ningún plato con ese ID.",
+                    tipo: "error"
+                });
+            }
         })
         .catch(error => {
             res.send({
-                titulo: "¡Error!",
-                mensaje: "El plato no se ha podido guardar:\n" + error,
+                titulo: "Error al eliminar",
+                mensaje: "Hubo un error al eliminar el plato.",
                 tipo: "error"
             });
         });

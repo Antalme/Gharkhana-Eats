@@ -27,6 +27,12 @@ h3 {
     font-weight: bold !important;
 }
 
+h4 {
+    color: var(--color-terciario) !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
 hr {
     height: 3px !important;
     background-color: var(--color-terciario);
