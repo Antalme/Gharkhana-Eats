@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     cargarListaPlatos()
+    cargarListaUsuarios()
 
     $("#limpiarPlato").click(function () {
         limpiarCamposPlato()
@@ -11,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("#eliminarPlato").click(function () {
         eliminarPlato()
+    })
+
+    $("#eliminarUsuario").click(function () {
+        eliminarUsuario()
     })
 
     //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
@@ -65,6 +70,7 @@ function cargarListaPlatos() {
     })
 }
 
+//Vacía los campos del formulario plato.
 function limpiarCamposPlato() {
     $("#idPlato").val("")
     $("#nombrePlato").val("")
@@ -74,6 +80,7 @@ function limpiarCamposPlato() {
     $("#archivoInput").val("");
 }
 
+//Carga los datos del plato pasado por parámetro.
 function cargarDatosPlato(plato) {
     $("#idPlato").val(plato._id)
     $("#nombrePlato").val(plato.nombre)
@@ -136,6 +143,66 @@ function eliminarPlato(idPlato) {
         method: 'POST',
         data: {
             idPlato: $("#idPlato").val(),
+        },
+        success: function (data) {
+            mostrarMensaje(data)
+        },
+        error: function (error) {
+            console.error(error)
+            mostrarMensaje(error.responseText)
+        }
+    })
+}
+
+/*
+Hace una petición AJAX para cargar y poblar la lista de usuarios 
+con todos los usuarios que existen en la base de datos.
+*/
+function cargarListaUsuarios() {
+    $.ajax({
+        url: "/obtener-usuarios",
+        method: "GET",
+        success: function (response) {
+            $('#listaUsuarios').empty()
+
+            response.forEach(function (usuario, index) {
+                const divUsuario = `
+                <div id="usuario_${index}" class="usuario">
+                    ${usuario.nombre}
+                </div>
+                `
+
+                $('#listaUsuarios').append(divUsuario)
+
+                $(`#usuario_${index}`).click(function () {
+                    cargarDatosUsuario(usuario)
+                });
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error: :", status, error)
+        }
+    })
+}
+
+//Carga los datos del usuario pasado por parámetro.
+function cargarDatosUsuario(usuario) {
+    $("#idUsuario").val(usuario._id)
+    $("#nombreUsuario").val(usuario.nombre)
+    $("#emailUsuario").val(usuario.email)
+    $("#passUsuario").val(usuario.pass)
+
+    var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
+    $("#imagenPlato").attr('src', imagenUrl)
+}
+
+//Elimina el usuario de la base de datos utilizando su ID.
+function eliminarUsuario(idUsuario) {
+    $.ajax({
+        url: '/eliminar-usuario',
+        method: 'POST',
+        data: {
+            idUsuario: $("#idUsuario").val(),
         },
         success: function (data) {
             mostrarMensaje(data)

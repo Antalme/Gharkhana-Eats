@@ -10,6 +10,10 @@ const path = require("path")
 const favicon = require('serve-favicon')
 const app = express();
 
+//Variables
+const puerto = 3000
+const hostname = "0.0.0.0"
+
 //Schemes
 const Usuario = require("./schemes/Usuario")
 const Plato = require("./schemes/Plato")
@@ -40,8 +44,9 @@ const upload = multer({ storage: storage });
 mongoose.connect(DB_URI).then((result) => {
     console.log("Conectado correctamente a la BD: " + result)
 
-    app.listen(3000, () => {
-        console.log("Servidor corriendo...")
+    //app.listen(puerto, () => {
+    app.listen(puerto, hostname, () => {
+        console.log("Servidor corriendo por " + hostname + ":" + puerto)
     })
 }).catch((error) => {
     console.log("Error: " + error)
@@ -130,6 +135,8 @@ app.get('/administracion', function (req, res) {
 // ----------- API REST ------------
 // ---------------------------------
 
+//[USUARIOS]
+
 //Maneja los inicios de sesión.
 app.post('/login', function (req, res) {
     const username = req.body.usuario;
@@ -207,7 +214,53 @@ app.post('/registro', function (req, res) {
     });
 })
 
-// Platos
+app.get('/obtener-usuarios', function (req, res) {
+    Usuario.find().then((resultado) => {
+        res.send(resultado)
+    }).catch((error) => {
+        console.log("Error: " + error)
+    })
+})
+
+//Devuelve el usuario pasado por GET
+app.get('/obtener-usuario', function (req, res) {
+    Usuario.find().then((resultado) => {
+        res.send(resultado)
+    }).catch((error) => {
+        console.log("Error: " + error)
+    })
+})
+
+app.post('/eliminar-usuario', function (req, res) {
+    const { idUsuario } = req.body
+
+    Usuario.deleteOne({ _id: idUsuario })
+        .then(result => {
+            if (result.deletedCount === 1) {
+                res.send({
+                    titulo: "Usuario eliminado",
+                    mensaje: "El usuario se ha eliminado correctamente.",
+                    tipo: "success"
+                });
+            } else {
+                res.send({
+                    titulo: "Error al eliminar",
+                    mensaje: "No se encontró ningún usuario con ese ID.",
+                    tipo: "error"
+                });
+            }
+        })
+        .catch(error => {
+            res.send({
+                titulo: "Error al eliminar",
+                mensaje: "Hubo un error al eliminar el usuario.",
+                tipo: "error"
+            });
+        });
+})
+
+//[PLATOS]
+
 app.get('/obtener-platos', function (req, res) {
     Plato.find().then((resultado) => {
         res.send(resultado)
@@ -285,7 +338,7 @@ app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
                 });
             });
     }
-});
+})
 
 app.post('/eliminar-plato', function (req, res) {
     const { idPlato } = req.body
@@ -297,13 +350,13 @@ app.post('/eliminar-plato', function (req, res) {
                     titulo: "Plato eliminado",
                     mensaje: "El plato se ha eliminado correctamente.",
                     tipo: "success"
-                });
+                })
             } else {
                 res.send({
                     titulo: "Error al eliminar",
                     mensaje: "No se encontró ningún plato con ese ID.",
                     tipo: "error"
-                });
+                })
             }
         })
         .catch(error => {
@@ -311,6 +364,6 @@ app.post('/eliminar-plato', function (req, res) {
                 titulo: "Error al eliminar",
                 mensaje: "Hubo un error al eliminar el plato.",
                 tipo: "error"
-            });
-        });
+            })
+        })
 })
