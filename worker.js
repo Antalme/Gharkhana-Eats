@@ -1,13 +1,14 @@
-const { parentPort } = require('worker_threads');
-const ObtenerIdsPlatos = require('./app'); // Ajusta la ruta según la estructura de tus archivos
+const { parentPort } = require('worker_threads')
+const axios = require('axios')
 
 const Plato = require("./schemes/Plato")
 const PlatoDia = require("./schemes/PlatoDia")
+const Usuario = require('./schemes/Usuario')
 
 function BucleGestorCalendario() {
     //setInterval(() => {
-    console.log('Gestor de gestores o troll de trolles, gran Philippe');
-    CargarPlatosDelMes();
+    console.log('Gestor de gestores o troll de trolles, gran Philippe')
+    CargarPlatosDelMes()
     //}, 1000);
 }
 
@@ -15,33 +16,18 @@ BucleGestorCalendario();
 
 //Envía un mensaje al hilo principal para indicar que el worker está listo
 //No sé para qué sirve o si realmente sirve
-parentPort.postMessage({ status: 'ready' });
+parentPort.postMessage({ status: 'ready' })
 
 //Busca todos días de aquí a un mes y añade dos platos a los días que no tengan.
 async function CargarPlatosDelMes() {
     try {
-        const ids = ObtenerIdsPlatos()
-        console.log(ids)
-        // Obtener todos los ids de los platos existentes
-        console.log("Cargando _id's de los platos...")
-        const resultado = await Plato.find({}, '_id')
-        const idsPlatos = resultado.map(plato => plato._id);
-        console.log(idsPlatos);
-
-        const hoy = new Date();
-        const proximoDiaSemana = new Date(hoy);
-        proximoDiaSemana.setDate(proximoDiaSemana.getDate() + 7);
-
-        for (let fecha = new Date(hoy); fecha <= proximoDiaSemana; fecha.setDate(fecha.getDate() + 1)) {
-            const año = fecha.getFullYear();
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Poner dos dígitos en el mes
-            const dia = String(fecha.getDate()).padStart(2, '0'); // Poner dos dígitos en el día
-            const fechaFormateada = `${año}-${mes}-${dia}`;
-
-            await AddPlatoAlDia(idsPlatos, fechaFormateada);
-        }
+        const response = await axios.post('http://0.0.0.0:3000/obtener-platos-ids')
+        const idsPlatos = response.data
+        console.log('IDs de los platos:', idsPlatos)
+        return idsPlatos
     } catch (error) {
-        console.log("Error al cargar los IDs de los platos: " + error);
+        console.error('Error al obtener los IDs de los platos:', error)
+        throw new Error('Error al obtener los IDs de los platos')
     }
 }
 
