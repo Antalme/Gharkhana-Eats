@@ -17,6 +17,7 @@ const hostname = "0.0.0.0"
 //Schemes
 const Usuario = require("./schemes/Usuario")
 const Plato = require("./schemes/Plato")
+const PlatoDia = require("./schemes/PlatoDia")
 
 const DB_URI = "mongodb+srv://hegispok:OMqUNsN286sFKvJt@clustergke0.xe4ond6.mongodb.net/gke?retryWrites=true&w=majority&appName=ClusterGKE0"
 
@@ -127,6 +128,7 @@ app.get('/administracion', function (req, res) {
 // ---------------------------------
 // ----------- API REST ------------
 // ---------------------------------
+
 
 //[USUARIOS]
 
@@ -252,6 +254,7 @@ app.post('/eliminar-usuario', function (req, res) {
         });
 })
 
+
 //[PLATOS]
 
 app.get('/obtener-platos', function (req, res) {
@@ -268,6 +271,17 @@ app.get('/obtener-plato', function (req, res) {
     }).catch((error) => {
         console.log("Error: " + error)
     })
+})
+
+app.post('/obtener-platos-ids', function (req, res) {
+    Plato.find({}, '_id')
+        .then(idsPlatos => {
+            res.status(200).json(idsPlatos);
+        })
+        .catch(error => {
+            console.error("Error al obtener los IDs de los platos:", error);
+            res.status(500).json({ error: "Error al obtener los IDs de los platos" });
+        });
 })
 
 app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
@@ -361,15 +375,36 @@ app.post('/eliminar-plato', function (req, res) {
         })
 })
 
-app.post('/obtener-platos-ids', function (req, res) {
-    Plato.find({}, '_id')
-        .then(idsPlatos => {
-            // Si se encontraron _id, enviarlos como respuesta
-            res.status(200).json(idsPlatos);
+
+//[PLATOSDIA]
+
+app.post('/obtener-platos-semana', function (req, res) {
+    PlatoDia.find({})
+        .then(platosDia => {
+            res.status(200).json(platosDia)
         })
         .catch(error => {
-            // Si hubo un error, enviar un mensaje de error
-            console.error("Error al obtener los IDs de los platos:", error);
-            res.status(500).json({ error: "Error al obtener los IDs de los platos" });
-        });
+            console.error("Error al obtener los platos del día:", error)
+            res.status(500).json({ error: "Error al obtener los platos del día" })
+        })
+})
+
+app.post('/guardar-plato-dia', function (req, res) {
+    const { fecha, idPlato, hora } = req.body;
+    console.log("Parámetros recibidos")
+    console.log(fecha, idPlato, hora)
+
+    const nuevoPlatoDia = new Plato({
+        fecha: fecha,
+        idPlato: idPlato,
+        hora: hora
+    });
+
+    /*nuevoPlatoDia.save()
+        .then(platoDiaGuardado => {
+            console.log("PlatoDia guardado correctamente.")
+        })
+        .catch(error => {
+            console.log(error)
+        });*/
 })
