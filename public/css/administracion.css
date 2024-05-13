@@ -1,7 +1,6 @@
 /* AREA GESTIÓN DE PLATOS */
 
 .cuerpo {
-    overflow-y: scroll;
     padding-bottom: 50px;
 }
 
@@ -12,12 +11,26 @@
     height: 300px;
 }
 
-#listaPlatos {
+#listaMasTotalPlatos {
     width: 25%;
     height: 100%;
     float: left;
     padding: 10px;
+}
+
+#listaPlatos {
+    width: 100%;
+    height: 95%;
+    padding: 10px;
     overflow-y: scroll;
+}
+
+#sublistaPlatos {
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    font-size: 12px;
+    color: grey;
 }
 
 #datosPlatos {
@@ -40,6 +53,7 @@
     margin-bottom: 5px;
     padding: 5px;
     background-color: var(--color-fondoSecundario);
+    border-radius: 5px;
 }
 
 /* Gestión usuarios*/
@@ -49,12 +63,26 @@
     height: 300px;
 }
 
-#listaUsuarios {
+#listaMasTotalUsuarios {
     width: 25%;
     height: 100%;
     float: left;
     padding: 10px;
+}
+
+#listaUsuarios {
+    width: 100%;
+    height: 95%;
+    padding: 10px;
     overflow-y: scroll;
+}
+
+#sublistaUsuarios {
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    font-size: 12px;
+    color: grey;
 }
 
 #datosUsuarios {
@@ -77,6 +105,7 @@
     margin-bottom: 5px;
     padding: 5px;
     background-color: var(--color-fondoSecundario);
+    border-radius: 5px;
 }
 
 /* Otros */
@@ -88,7 +117,7 @@
     padding: 10px;
 }
 
-.contenedorDatos{
+.contenedorDatos {
     height: 100%;
     width: 45%;
     float: left;

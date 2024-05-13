@@ -10,11 +10,17 @@ Estilos que se comparten a lo largo de toda la página.
     --color-fondoSecundario: #e7e7ce;
 }
 
-html,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-fondoPrimario)
+}
+
 body {
     font-family: "Roboto", sans-serif !important;
-    height: 100%;
     width: 100%;
+    min-height: 100%;
+    overflow-y: scroll;
 }
 
 h2 {
@@ -47,7 +53,7 @@ hr {
     padding-right: 20%;
 
     font-size: 18px;
-    background-color: var(--color-fondoPrimario);
+    background-color: var(--color-fondoPrimario)
 }
 
 /* Scrollbar */

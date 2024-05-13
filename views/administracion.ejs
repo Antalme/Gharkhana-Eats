@@ -14,11 +14,14 @@
                 <hr>
                 <p>Añade, modifica o elimina un plato.</p>
                 <div id="gestionPlatos">
-                    <div id="listaPlatos">
-                        <div id="cargando">
-                            <img src="/images/gif_cargando.gif" width="50%" />
-                            <p>Cargando...</p>
+                    <div id="listaMasTotalPlatos">
+                        <div id="listaPlatos">
+                            <div id="cargando">
+                                <img src="/images/gif_cargando.gif" width="50%" />
+                                <p>Cargando...</p>
+                            </div>
                         </div>
+                        <div id="sublistaPlatos"></div>
                     </div>
                     <div id="datosPlatos">
                         <div class="contenedorImagen">
@@ -50,13 +53,16 @@
                 <br>
                 <h3>Gestión de usuarios</h4>
                     <hr>
-                    <p>Añade, modifica o elimina un plato.</p>
+                    <p>Ve y elimina usuarios.</p>
                     <div id="gestionUsuarios">
-                        <div id="listaUsuarios">
-                            <div id="cargando">
-                                <img src="/images/gif_cargando.gif" width="50%" />
-                                <p>Cargando...</p>
+                        <div id="listaMasTotalUsuarios">
+                            <div id="listaUsuarios">
+                                <div id="cargando">
+                                    <img src="/images/gif_cargando.gif" width="50%" />
+                                    <p>Cargando...</p>
+                                </div>
                             </div>
+                            <div id="sublistaUsuarios"></div>
                         </div>
                         <div id="datosUsuarios">
                             <div class="contenedorDatos">
@@ -66,8 +72,8 @@
                                     name="nombreUsuario" placeholder="Nombre del usuario" disabled>
                                 <input type="text" class="form-control usuarioDato" id="emailUsuario"
                                     name="emailUsuario" placeholder="Email del usuario" disabled>
-                                <input type="text" class="form-control usuarioDato" id="passUsuario"
-                                    name="passUsuario" placeholder="Contraseña del usuario" disabled>
+                                <input type="text" class="form-control usuarioDato" id="passUsuario" name="passUsuario"
+                                    placeholder="Contraseña del usuario" disabled>
                                 <div class="botonesUsuarios">
                                     <button type="button" class="btn" id="eliminarUsuario">
                                         <i class="fas fa-trash mr-1"></i>Eliminar</button>

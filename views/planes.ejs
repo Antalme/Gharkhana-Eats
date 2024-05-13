@@ -1,26 +1,51 @@
 <%- include('head') %>
-    <link href="css/perfil.css" rel="stylesheet">
+    <link href="css/planes.css" rel="stylesheet">
 
     <body>
         <%- include('cabecera') %>
 
-        <div class="cuerpo">
-            <h2>¡Hola <%= session.username %>!</h2>
-            <hr>
-            <h3>Infórmate sobre nuestros planes de suscripción:</h2>
-            <div class="planes">
-                <div class="plan">80€ / mes</div>
-                <div class="plan">120€ / mes</div>
-                <div class="plan">220€ / mes</div>
+            <div class="cuerpo">
+                <h2>Planes de Gharkhana Eats</h2>
+                <hr>
+                <div class="planes">
+                    <div class="plan">
+                        <div class="cajaCarta">
+                            <div class="titulo">SEMANAL</div>
+                            <br>
+                            <div class="precio">49,99€ / semana</div>
+                            <br>
+                            <div class="descripcion">Plan sencillo de una sola semana. Perfecto para poder probar si
+                                nuestro
+                                servicio es de tu agrado.</div>
+                            <br>
+                            <div class="descripcion">¡Con ese plan ahorrarás más de <b>40€</b> a la semana!</div>
+                        </div>
+                        <div class="cajaBoton">
+                            <button type="submit" class="btn btn-block mb-3" id="botonContratarSemana">Contratar plan
+                                semanal</button>
+                        </div>
+                    </div>
+
+                    <div class="plan">
+                        <div class="cajaCarta">
+                            <div class="titulo">MENSUAL</div>
+                            <br>
+                            <div class="precio">199,96€ / mes</div>
+                            <br>
+                            <div class="descripcion">Disfruta de Gharkhana Eats todo un mes. Si ya sabes cómo
+                                funcionamos, o te lo han contado, este es tu plan.</div>
+                            <br>
+                            <div class="descripcion">¡Con ese plan ahorrarás más de <b>160€</b> al mes!</div><br>
+                        </div>
+                        <div class="cajaBoton">
+                            <button type="submit" class="btn btn-block mb-3" id="botonContratarMes">Contratar plan
+                                mensual</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <h3>Infórmate sobre nuestros planes de suscripción:</h2>
-            <div class="planes">
-                <div class="plan">80€/mes</div>
-                <div class="plan">120€/mes</div>
-                <div class="plan">220€/mes</div>
-            </div>
-        </div>
     </body>
+
+    <script src="js/planes.js" defer></script>
 
     <%- include('footer') %>

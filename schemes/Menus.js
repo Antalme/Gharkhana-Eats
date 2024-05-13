@@ -1,20 +1,20 @@
 const mongoose = require("mongoose")
 
-const platoDiaSchema = new mongoose.Schema({
+const menusSchema = new mongoose.Schema({
     fecha: {
         type: String,
         require: true
     },
-    idPlato: {
+    idPlatoManana: {
         type: String,
         require: true
     },
-    hora: {
+    idPlatoNoche: {
         type: String,
         require: true
     }
 }, { timestamps: true })
 
-const PlatoDia = mongoose.model("PlatoDia", platoDiaSchema)
+const Menus = mongoose.model("Menus", menusSchema)
 
-module.exports = PlatoDia;
+module.exports = Menus;

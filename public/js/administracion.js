@@ -49,6 +49,7 @@ function cargarListaPlatos() {
         method: "GET",
         success: function (response) {
             $('#listaPlatos').empty()
+            $("#sublistaPlatos").text("Platos totales: " + response.length)
 
             response.forEach(function (plato, index) {
                 const divPlato = `
@@ -164,6 +165,7 @@ function cargarListaUsuarios() {
         method: "GET",
         success: function (response) {
             $('#listaUsuarios').empty()
+            $("#sublistaUsuarios").text("Usuarios totales: " + response.length)
 
             response.forEach(function (usuario, index) {
                 const divUsuario = `

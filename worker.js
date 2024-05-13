@@ -1,13 +1,9 @@
 const { parentPort } = require('worker_threads')
 const axios = require('axios')
 
-const Plato = require("./schemes/Plato")
-const PlatoDia = require("./schemes/PlatoDia")
-const Usuario = require('./schemes/Usuario')
-
 function BucleGestorCalendario() {
     //setInterval(() => {
-    console.log('Gestor de gestores o troll de trolles, gran Philippe')
+    console.warn('TODO: HACER QUE EL WORKER SE EJECUTE CADA X TIEMPO')
     CargarPlatosDelMes()
     //}, 1000);
 }
@@ -16,44 +12,55 @@ function BucleGestorCalendario() {
 async function CargarPlatosDelMes() {
     try {
         //Obtiene una lista con la ID de todos los platos.
-        const respuestaPlatos = await axios.post('http://0.0.0.0:3000/obtener-platos-ids')
+        const respuestaPlatos = await axios.get('http://localhost:3000/obtener-platos-ids')
         const idsPlatos = respuestaPlatos.data.map(plato => plato._id)
 
         //Obtiene la lista de los días que ya tienen platos asignados. 
-        const respuestaDiasConPlato = await axios.post('http://0.0.0.0:3000/obtener-platos-semana')
-        const diasConPlato = respuestaDiasConPlato.data.map(plato => plato._id);
+        const respuestaMenus = await axios.get('http://localhost:3000/obtener-menus')
+        const menus = respuestaMenus.data
 
         //Obtiene la fecha de los días desde hoy hasta la semana que viene.
         const diasHastaSiguienteSemana = obtenerFechasHastaSiguienteSemana()
 
         //Itera sobre todas las fechas desde el día actual hasta dentro de una semana.
         for (var i = 0; i < diasHastaSiguienteSemana.length; i++) {
-            console.log("Buscando si el día " + diasHastaSiguienteSemana[i] + " tiene platos")
+            const diaSemana = diasHastaSiguienteSemana[i]
             var existe = false
+
             //Itera sobre todos los días con platos para comprobar si ya existe un plato para ese día.
-            for (var j = 0; j < respuestaDiasConPlato.length; j++) {
-                if (diasHastaSiguienteSemana[i] == respuestaDiasConPlato[j]) {
-                    console.log("El plato existe")
+            for (var j = 0; j < menus.length; j++) {
+                menuDia = menus[j]
+
+                if (diaSemana == menuDia.fecha) {
                     existe = true
                     break
                 }
             }
-
-            //Si no se ha encontrado ningún plato para ese día, lo añade de forma aleatoria.
+            
+            //Si no se ha encontrado ningún plato para ese día, lo añade de forma aleatoria (mañana y noche).
             if (!existe) {
-                console.log("   No tiene plato")
-                const platoAleatorioMañana = idsPlatos[Math.floor(Math.random() * idsPlatos.length)]
-                //console.log("Plato: " + platoAleatorioMañana + " del día " + platoAleatorioMañana)
+                const platoAleatorioManana = idsPlatos[Math.floor(Math.random() * idsPlatos.length)]
                 const platoAleatorioNoche = idsPlatos[Math.floor(Math.random() * idsPlatos.length)]
-                //console.log("Plato: " + platoAleatorioNoche + " en la comida del")
 
-                await axios.post('http://0.0.0.0:3000/guardar-plato-dia', {
-                    fecha: "a",
-                    idPlato: "b",
-                    hora: "c"
+                await axios.post('http://localhost:3000/guardar-menu', {
+                    fecha: diaSemana,
+                    idPlatoManana: platoAleatorioManana,
+                    idPlatoNoche: platoAleatorioNoche
+                }).then(res => {
+                    console.log(res.data.message);
+                }).catch(error => {
+                    console.error("Error al enviar la solicitud:", error);
                 })
             }
         }
+
+        //Elimina los días anteriores a la fecha actual.
+        await axios.post('http://localhost:3000/eliminar-menus-anteriores')
+        .then(res => {
+            console.log(res.data.message)
+        }).catch(error => {
+            console.error("Error al enviar la solicitud:", error)
+        })
 
     } catch (error) {
         console.error('Error al obtener los IDs de los platos:', error)
@@ -82,7 +89,7 @@ function obtenerFechasHastaSiguienteSemana() {
 }
 
 //Comienza el bucle.
-BucleGestorCalendario();
+BucleGestorCalendario()
 
 //Envía un mensaje al hilo principal para indicar que el worker está listo
 //No sé para qué sirve o si realmente sirve

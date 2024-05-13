@@ -3,12 +3,15 @@ const { Worker } = require('worker_threads')
 var worker = null
 const express = require("express")
 const session = require("express-session")
+const Stripe = require("stripe")
 const mongoose = require("mongoose")
 const MongoDBSession = require("connect-mongodb-session")(session)
 const multer = require('multer');
 const path = require("path")
 const favicon = require('serve-favicon')
 const app = express();
+
+const stripe = new Stripe("sk_test_51PFaWnCjZnfRslZLQxWaspzwIwLmzIJCIn8wGrfOMZvMyndv1WCwMj0PEgL4tzWKFgoGYcBtqKHPgr8AV4z4a9W900tzN7ovON")
 
 //Variables
 const puerto = 3000
@@ -17,7 +20,7 @@ const hostname = "0.0.0.0"
 //Schemes
 const Usuario = require("./schemes/Usuario")
 const Plato = require("./schemes/Plato")
-const PlatoDia = require("./schemes/PlatoDia")
+const Menus = require("./schemes/Menus")
 
 const DB_URI = "mongodb+srv://hegispok:OMqUNsN286sFKvJt@clustergke0.xe4ond6.mongodb.net/gke?retryWrites=true&w=majority&appName=ClusterGKE0"
 
@@ -123,6 +126,35 @@ app.get('/acercade', function (req, res) {
 
 app.get('/administracion', function (req, res) {
     res.render("administracion.ejs")
+})
+
+app.post('/checkout-semanal', async function (req, res) {
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price_data: {
+                    product_data: {
+                        name: "Plan semanal",
+                        description: 'Subscripción por una sola semana al servicio de Gharkhana Eats.'
+                    },
+                    currency: 'eur',
+                    unit_amount: 4999
+                },
+                quantity: 1
+            }
+        ],
+        mode: 'subscription',
+        success_url: 'http://localhost:3000/compra-exitosa',
+        cancel_url: 'http://localhost:3000/compra-cancelada'
+    })
+    return res.json(session)
+})
+
+app.get('/compra-exitosa', function (req, res) {
+    res.send("aaaaaa")
+})
+
+app.get('/compra-cancelada', function (req, res) {
 })
 
 // ---------------------------------
@@ -273,7 +305,7 @@ app.get('/obtener-plato', function (req, res) {
     })
 })
 
-app.post('/obtener-platos-ids', function (req, res) {
+app.get('/obtener-platos-ids', function (req, res) {
     Plato.find({}, '_id')
         .then(idsPlatos => {
             res.status(200).json(idsPlatos);
@@ -376,10 +408,10 @@ app.post('/eliminar-plato', function (req, res) {
 })
 
 
-//[PLATOSDIA]
+//[MENU]
 
-app.post('/obtener-platos-semana', function (req, res) {
-    PlatoDia.find({})
+app.get('/obtener-menus', function (req, res) {
+    Menus.find({})
         .then(platosDia => {
             res.status(200).json(platosDia)
         })
@@ -389,22 +421,42 @@ app.post('/obtener-platos-semana', function (req, res) {
         })
 })
 
-app.post('/guardar-plato-dia', function (req, res) {
-    const { fecha, idPlato, hora } = req.body;
-    console.log("Parámetros recibidos")
-    console.log(fecha, idPlato, hora)
+app.post('/guardar-menu', function (req, res) {
+    const { fecha, idPlatoManana, idPlatoNoche } = req.body;
 
-    const nuevoPlatoDia = new Plato({
+    const nuevoPlatoDia = new Menus({
         fecha: fecha,
-        idPlato: idPlato,
-        hora: hora
+        idPlatoManana: idPlatoManana,
+        idPlatoNoche: idPlatoNoche
     });
 
-    /*nuevoPlatoDia.save()
+    nuevoPlatoDia.save()
         .then(platoDiaGuardado => {
-            console.log("PlatoDia guardado correctamente.")
+            res.status(200).json({ message: "Menú del día " + fecha + " creado correctamente." });
         })
         .catch(error => {
-            console.log(error)
-        });*/
+            console.error(error)
+            res.status(500).json({ error: "Error al guardar el plato en la base de datos" });
+        });
+})
+
+//Elimina todos los menús que anteriores a la fecha actual.
+app.post('/eliminar-menus-anteriores', function (req, res) {
+    //Obtiene la fecha actual
+    var fechaActual = new Date()
+
+    //Formatea la fecha actual para compararla con las fechas almacenadas en la base de datos
+    var fechaActualFormateada = fechaActual.toISOString().split('T')[0]
+
+    //Elimina los registros con fecha anterior a la actual
+    Menus.deleteMany({ fecha: { $lt: fechaActualFormateada } })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({ message: "Menús antiguos eliminados: " + result.deletedCount })
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(500).json({ error: "Error al eliminar los menus antiguos" })
+        })
 })

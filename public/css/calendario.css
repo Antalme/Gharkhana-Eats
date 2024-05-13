@@ -1,8 +1,15 @@
-.menuDia {
+#menus {
+    width: 100%;
+    text-align: center;
+}
+
+.menu{
     width: 100%;
     background-color: var(--color-fondoSecundario);
     border-radius: 20px;
     padding: 20px;
+    margin-bottom: 40px;
+    text-align: left;
 }
 
 .fecha {
