@@ -8,6 +8,9 @@ Estilos que se comparten a lo largo de toda la página.
     --color-terciario: #ff914d;
     --color-fondoPrimario: #f5f5dc;
     --color-fondoSecundario: #e7e7ce;
+
+    --cabecera-texto-borde: 1px;
+    --cabecera-texto-color: var(--color-fondoSecundario);
 }
 
 html {

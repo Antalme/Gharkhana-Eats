@@ -134,12 +134,27 @@ app.post('/checkout-semanal', async function (req, res) {
             {
                 price_data: {
                     product_data: {
-                        name: "Plan semanal",
-                        description: 'Subscripción por una sola semana al servicio de Gharkhana Eats.'
+                        name: "Prueba de 1 semana",
+                        description: 'Prueba el servicio Gharkhana Eats por una semana sin cobros automáticos. Cuando pase una semana, se acabará el servicio y no se te cobrará más.'
                     },
                     currency: 'eur',
                     unit_amount: 4999
                 },
+                quantity: 1
+            }
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:3000/compra-exitosa',
+        cancel_url: 'http://localhost:3000/compra-cancelada'
+    })
+    return res.json(session)
+})
+
+app.post('/checkout-mensual', async function (req, res) {
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price: 'price_1PG0nnCjZnfRslZLsaWU9eIp',
                 quantity: 1
             }
         ],
@@ -148,13 +163,14 @@ app.post('/checkout-semanal', async function (req, res) {
         cancel_url: 'http://localhost:3000/compra-cancelada'
     })
     return res.json(session)
-})
+});
 
 app.get('/compra-exitosa', function (req, res) {
     res.send("aaaaaa")
 })
 
 app.get('/compra-cancelada', function (req, res) {
+    res.render("planes.ejs")
 })
 
 // ---------------------------------

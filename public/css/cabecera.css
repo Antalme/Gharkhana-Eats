@@ -6,6 +6,16 @@
     padding: 14px 20px;
     z-index: 1000;
     text-align: right;
+
+    text-shadow:
+        var(--cabecera-texto-borde) 0 var(--cabecera-texto-color),
+        calc(-1 * var(--cabecera-texto-borde)) 0 var(--cabecera-texto-color),
+        0 var(--cabecera-texto-borde) var(--cabecera-texto-color),
+        0 calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
+        var(--cabecera-texto-borde) var(--cabecera-texto-borde) var(--cabecera-texto-color),
+        calc(-1 * var(--cabecera-texto-borde)) calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
+        var(--cabecera-texto-borde) calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
+        calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-borde) var(--cabecera-texto-color);
 }
 
 .barraSuperior .enlaces a {
