@@ -10,7 +10,7 @@
 
 .planes {
     width: 100%;
-    height: 500px;
+    height: 480px;
     padding: 10px;
 
     display: flex;
@@ -20,7 +20,7 @@
 }
 
 .plan {
-    width: 31%;
+    width: 32%;
     height: 100%;
 
     margin-left: 1%;

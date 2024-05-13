@@ -2,10 +2,10 @@
     position: fixed;
     top: 0;
     left: 0;
+    height: 150px;
     width: 100%;
     padding: 14px 20px;
     z-index: 1000;
-    text-align: right;
 
     text-shadow:
         var(--cabecera-texto-borde) 0 var(--cabecera-texto-color),
@@ -18,11 +18,31 @@
         calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-borde) var(--cabecera-texto-color);
 }
 
-.barraSuperior .enlaces a {
+#derecha a:hover {
+    color: var(--color-terciario);
+}
+
+#izquierda {
+    width: 200px;
+    height: 100%;
+    float: left;
+    text-align: left;
+}
+
+#derecha {
+    float: right;
+    text-align: right;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#derecha a {
     color: var(--color-primario);
     margin-right: 10px;
     text-decoration: none;
     transition: color 0.3s;
-    font-weight: bold;
-    font-size: 18px;
+}
+
+#logo{
+    max-height: 100%;
 }

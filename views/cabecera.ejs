@@ -1,11 +1,10 @@
 <link href="css/cabecera.css" rel="stylesheet">
 
 <div class="barraSuperior">
-    <div class="enlaces">
-        <a href="/">HOME</a>
-        <a href="/platos">Nuestros platos</a>
-        <a href="/planes">Planes</a>
-        <a href="/calendario">Calendario</a>
+    <div id="izquierda">
+        <a href="/"><img id="logo" src="images/ge_logo.png"></a>
+    </div>
+    <div id="derecha">
         <% if (session.isAuth) { %>
             <a href="/perfil">Perfil</a>
             <a href="/logout">Cerrar sesión</a>
@@ -13,7 +12,10 @@
             <a href="/login">Iniciar sesión</a>
             <a href="/registro">Registrarse</a>
         <% } %>
+        <a href="/platos">Nuestros platos</a>
+        <a href="/calendario">Calendario</a>
+        <a href="/planes">Planes</a>
         <a href="/acercade">Acerca de</a>
-        <a href="/administracion">ADMINISTRACION</a>
+        <a href="/administracion">[ADMINISTRACIÓN]</a>
     </div>
 </div>

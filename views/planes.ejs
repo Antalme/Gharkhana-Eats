@@ -20,8 +20,12 @@
                             <div class="descripcion">¡Con ese plan ahorrarás más de <b>40€</b> a la semana!</div>
                         </div>
                         <div class="cajaBoton">
-                            <button type="submit" class="btn btn-block mb-3" id="botonPlanSemanal">Contratar plan
-                                semanal</button>
+                            <% if (session.isAuth) { %>
+                                <button type="submit" class="btn btn-block mb-3" id="botonPlanSemanal">¡Contratar plan
+                                    semanal!</button>
+                            <% } else { %>
+                                <button type="submit" class="btn btn-block mb-3" id="botonPlanSemanal_sinRegistro">¡Registrate para probarlo!</button>
+                            <% } %>
                         </div>
                     </div>
 
@@ -37,8 +41,12 @@
                             <div class="descripcion">¡Con ese plan ahorrarás más de <b>170€</b> al mes!</div><br>
                         </div>
                         <div class="cajaBoton">
-                            <button type="submit" class="btn btn-block mb-3" id="botonPlanMensual">Contratar plan
-                                mensual</button>
+                            <% if (session.isAuth) { %>
+                                <button type="submit" class="btn btn-block mb-3" id="botonPlanMensual">¡Contratar plan
+                                    mensual!</button>
+                            <% } else { %>
+                                <button type="submit" class="btn btn-block mb-3" id="botonPlanMensual_sinRegistro">¡Registrate para suscribirte!</button>
+                            <% } %>
                         </div>
                     </div>
                 </div>

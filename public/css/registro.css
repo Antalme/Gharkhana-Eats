@@ -30,3 +30,8 @@
 .mensaje-flotante.mostrar {
     display: block; /* Mostrar el mensaje */
 }
+
+#tituloPie{
+    text-align: center;
+    font-weight: bold;
+}

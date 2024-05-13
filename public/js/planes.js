@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#botonPlanMensual").click(function () {
         checkoutMensual()
     })
+
+    $("#botonPlanSemanal_sinRegistro").click(function () {
+        window.location.href = "/registro"
+    })
+
+    $("#botonPlanMensual_sinRegistro").click(function () {
+        window.location.href = "/registro"
+    })
 })
 
 //Redirecciona a la página de checkout para hacer el pago semanalmente.

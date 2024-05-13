@@ -2,29 +2,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.barraSuperior {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 14px 20px;
-    z-index: 1000;
-    text-align: right;
-}
-
-.barraSuperior .enlaces a {
-    color: var(--color-primario);
-    margin-right: 10px;
-    text-decoration: none;
-    transition: color 0.3s;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.barraSuperior .enlaces a:hover {
-    color: #ddd;
-}
-
 .cuerpoLogo {
     padding-top: 30px;
     text-align: center;
