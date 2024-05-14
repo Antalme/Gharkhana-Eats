@@ -166,7 +166,7 @@ app.post('/checkout-mensual', async function (req, res) {
 });
 
 app.get('/compra-exitosa', function (req, res) {
-    res.send("aaaaaa")
+    res.render("compra-exitosa.ejs")
 })
 
 app.get('/compra-cancelada', function (req, res) {

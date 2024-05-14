@@ -1,34 +1,32 @@
 <%- include('head') %>
-    <link href="css/registro.css" rel="stylesheet">
+    <link href="css/login-registro.css" rel="stylesheet">
 
     <body>
         <%- include('cabecera') %>
             <div class="cuerpo">
-                <div class="container mt-5">
-                    <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <h2 class="titulo text-center mb-4">¡Forma parte de nuestra humilde familia!</h2>
-                            <form action="/registro" method="POST">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" id="usuario" name="usuario"
-                                        placeholder="Nombre de usuario" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email"
-                                        required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" id="pass" name="pass"
-                                        placeholder="Contraseña" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block mb-3">Registrarse</button>
-                                <button type="submit" class="btn btn-danger btn-block mb-3"><i
-                                        class="fab fa-google mr-2"></i> Registrarse con mi cuenta de Google</button>
-                                <div id="tituloPie">
-                                    <p><a href="/login">Si ya tienes cuenta, puedes iniciar sesión desde aquí</a></p>
-                                </div>
-                            </form>
-                        </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <h2 class="titulo text-center mb-4">¡Forma parte de nuestra humilde familia!</h2>
+                        <form action="/registro" method="POST">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="usuario" name="usuario"
+                                    placeholder="Nombre de usuario" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="pass" name="pass"
+                                    placeholder="Contraseña" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mb-3">Registrarse</button>
+                            <button type="submit" class="btn btn-danger btn-block mb-3"><i
+                                    class="fab fa-google mr-2"></i> Registrarse con mi cuenta de Google</button>
+                            <div id="tituloPie">
+                                <p><a href="/login">Si ya tienes cuenta, puedes iniciar sesión desde aquí</a></p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

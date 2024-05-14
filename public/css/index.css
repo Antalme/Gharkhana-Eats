@@ -1,18 +1,45 @@
-body {
-    font-family: Arial, sans-serif;
+.cuerpo {
+    width: 100%;
+    height: 100%;
+
+    font-size: 18px;
+    background-color: var(--color-fondoPrimario)
 }
 
 .cuerpoLogo {
+    margin-top: 40px;
     padding-top: 30px;
     text-align: center;
     background-color: var(--color-fondoPrimario);
     padding: 40px;
 }
 
+#eslogan {
+    font-style: italic;
+    font-size: 16px;
+    color: rgb(156, 156, 145);
+    font-weight: bold;
+}
+
+#cita {
+    color: #a5a381;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 60px;
+    background-color: var(--color-fondoSecundario);
+}
+
+#nombreCita{
+    color: #b8b698;
+    font-size: 22px;
+    text-align: right;
+    padding-right: 40px;
+}
+
 .cuerpoComidas {
     width: 100%;
     text-align: center;
-    background-color: var(--color-fondoSecundario);
+    background-color: var(--color-fondoPrimario);
     padding: 30px;
     overflow: hidden;
 
