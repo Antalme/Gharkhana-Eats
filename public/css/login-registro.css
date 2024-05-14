@@ -12,6 +12,15 @@
 .btn {
     height: 50px;
     padding: 10px 15px;
+    background-color: var(--color-primario);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: var(--color-terciario) !important;
+    color: rgb(255, 255, 255) !important;
 }
 
 .mensaje-flotante {
@@ -34,4 +43,8 @@
 #tituloPie{
     text-align: center;
     font-weight: bold;
+}
+
+.oculto {
+    display: none;
 }
