@@ -17,6 +17,8 @@ const stripe = new Stripe("sk_test_51PFaWnCjZnfRslZLQxWaspzwIwLmzIJCIn8wGrfOMZvM
 const puerto = 3000
 const hostname = "0.0.0.0"
 
+const tiempoSesion = 3600000 //En milisegundos (86400000 = 24 horas / 3600000 = 1 hora)
+
 //Schemes
 const Usuario = require("./schemes/Usuario")
 const Plato = require("./schemes/Plato")
@@ -60,13 +62,14 @@ app.use(session({
     saveUnitialized: false,
     store: store,
     cookie: {
-        maxAge: 30000
+        maxAge: tiempoSesion
     }
 }))
 
-const isAuth = (req, res, next) => {
+//Middleware que evita que el usuario pase si no tiene la sesión iniciada.
+function necesitaRegistro(req, res, next) {
     if (req.session.isAuth) {
-        next()
+        return next();
     } else {
         res.redirect("/login")
     }
@@ -85,7 +88,7 @@ app.get('/', function (req, res) {
     res.render("index.ejs")
 })
 
-app.get('perfil', function (req, res) {
+app.get('/perfil', necesitaRegistro, function (req, res) {
     res.render("perfil.ejs")
 })
 
@@ -186,10 +189,18 @@ app.post('/login', function (req, res) {
     const pass = req.body.pass;
 
     // Buscar el usuario en MongoDB
-    Usuario.findOne({ $and: [{ nombre: username }, { pass: pass }] }).then((usuarioExistente) => {
+    Usuario.findOne({ $and: [{ nombreUsuario: username }, { pass: pass }] }).then((usuarioExistente) => {
         if (usuarioExistente) {
+            //Guarda los datos importantes del usuario en el objeto de la sesión.
             req.session.isAuth = true
-            req.session.username = username;
+            req.session.nombreUsuario = usuarioExistente.nombreUsuario;
+            req.session.email = usuarioExistente.email;
+            req.session.nombreCompleto = usuarioExistente.nombreCompleto;
+            req.session.direccion = usuarioExistente.direccion;
+            req.session.planActual = usuarioExistente.planActual;
+            req.session.fechaRegistro = usuarioExistente.createdAt;
+            req.session.rango = usuarioExistente.rango;
+            
             res.send({
                 titulo: "La abuelita te saluda",
                 mensaje: "¡Bienvenido a Gharkhana Eats!",
@@ -235,7 +246,7 @@ app.post('/registro', function (req, res) {
             }
         } else {
             const usuario = new Usuario({
-                nombre: username,
+                nombreUsuario: username,
                 email: email,
                 pass: pass,
                 nombreCompleto: nombreCompleto,
@@ -306,6 +317,32 @@ app.post('/eliminar-usuario', function (req, res) {
                 tipo: "error"
             });
         });
+})
+
+app.post('/eliminar-todos-usuarios', function (req, res) {
+    Usuario.deleteMany({})
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.send({
+                    titulo: "Usuarios eliminados",
+                    mensaje: "Todos los usuarios se han eliminado correctamente.",
+                    tipo: "success"
+                })
+            } else {
+                res.send({
+                    titulo: "Error al eliminar",
+                    mensaje: "No hay usuarios que eliminar.",
+                    tipo: "error"
+                })
+            }
+        })
+        .catch(error => {
+            res.send({
+                titulo: "Error al eliminar",
+                mensaje: "Hubo un error al eliminar los usuarios.",
+                tipo: "error"
+            })
+        })
 })
 
 
@@ -428,7 +465,6 @@ app.post('/eliminar-plato', function (req, res) {
             })
         })
 })
-
 
 //[MENU]
 

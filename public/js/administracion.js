@@ -18,6 +18,23 @@ document.addEventListener('DOMContentLoaded', function () {
         eliminarUsuario()
     })
 
+    $("#eliminarTodosUsuarios").click(function () {
+        Swal.fire({
+            title: 'ELIMINACIÓN DE TODOS LOS USUARIOS',
+            text: '¡ESTA ACCIÓN NO SE PUEDE DESHACER!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#FF0000',
+            cancelButtonColor: '#0000FF',
+            confirmButtonText: 'Sí, quiero eliminarlos TODOS',
+            cancelButtonText: 'No, no quiero eliminarlos'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminarTodosUsuarios()
+            }
+        });
+    })
+
     //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
     //para que se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
     $("#cargarFotoPlato").click(function () {
@@ -170,7 +187,7 @@ function cargarListaUsuarios() {
             response.forEach(function (usuario, index) {
                 const divUsuario = `
                 <div id="usuario_${index}" class="usuario">
-                    ${usuario.nombre}
+                    ${usuario.nombreUsuario}
                 </div>
                 `
 
@@ -202,6 +219,24 @@ function cargarDatosUsuario(usuario) {
 function eliminarUsuario(idUsuario) {
     $.ajax({
         url: '/eliminar-usuario',
+        method: 'POST',
+        data: {
+            idUsuario: $("#idUsuario").val(),
+        },
+        success: function (data) {
+            mostrarMensaje(data)
+        },
+        error: function (error) {
+            console.error(error)
+            mostrarMensaje(error.responseText)
+        }
+    })
+}
+
+//Eliminar todos los usuarios de la base de datos.
+function eliminarTodosUsuarios() {
+    $.ajax({
+        url: '/eliminar-todos-usuarios',
         method: 'POST',
         data: {
             idUsuario: $("#idUsuario").val(),

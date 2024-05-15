@@ -16,6 +16,9 @@
         <a href="/calendario">Calendario</a>
         <a href="/planes">Planes</a>
         <a href="/acercade">Acerca de</a>
-        <a href="/administracion">[ADMINISTRACIÓN]</a>
+        <% if (session.rango == "Administrador") { %>
+            <a href="/administracion">[ADMINISTRACIÓN]</a>
+            <% } else { %>
+        <% } %>
     </div>
 </div>

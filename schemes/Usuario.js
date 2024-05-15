@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const usuarioSchema = new mongoose.Schema({
-    nombre: {
+    nombreUsuario: {
         type: String,
         require: true
     },
@@ -20,6 +20,16 @@ const usuarioSchema = new mongoose.Schema({
     direccion: {
         type: String,
         require: true
+    },
+    planActual: {
+        type: String,
+        enum: ['Sin plan', 'Plan semanal', 'Plan mensual'],
+        default: 'Sin plan'
+    },
+    rango: {
+        type: String,
+        enum: ['Cliente', 'Repartido', 'Adminstrador'],
+        default: 'Cliente'
     }
 }, { timestamps: true })
 

@@ -5,30 +5,33 @@
         <%- include('cabecera') %>
 
             <div class="cuerpo">
-                <h2>¡Hola <%= session.username %>!</h2>
+                <h2>¡Bienvenido a tu perfil personal, <%= session.nombreUsuario %>!</h2>
                 <hr>
                 <div class="informacion">
-                    <p id="nombre">Tu plan actual: </p>
-                    <p id="nombre">Con nosotros desde el </p>
+                    <p id="planActual"><b>Tu plan actual:</b> <%= session.planActual %></p>
+                    <p id="planActual"><b>Tu rango actual:</b> <%= session.rango %></p>
+                    <p id="fechaRegistro"><b>Fecha de registro: </b> <%= session.fechaRegistro %></p>
                 </div>
                 <br>
                 <div class="informacionPersonal">
                     <h3>Información personal</h2>
                         <hr>
-                        <p id="nombre">Nombre de usuario: </p>
-                        <p id="nombre">Email: </p>
-                        <p id="nombre">Cambiar contraseña: </p>
+                        <p><b>Nombre de usuario:</b> <%= session.nombreUsuario %></p>
+                        <p id="email"><b>Email:</b> <%= session.email %></p>
+                        <p><b>Cambiar contraseña</b></p>
                         <br>
-                        <p id="nombre">Nombre completo: </p>
-                        <p id="nombre">Dirección de entrega: </p>
+                        <p id="nombreCompleto"><b>Nombre completo:</b> <%= session.nombreCompleto %></p>
+                        <p id="direccion"><b>Dirección de entrega:</b> <%= session.direccion %></p>
                 </div>
                 <br>
                 <div class="historialEntregas">
-                    <h3>Historial de entregas</h2>
+                    <h3>Historial de pagos</h2>
                         <hr>
-                        <p id="nombre">Aquí va la tabla...</p>
+                        <p>Aquí va la tabla con todos los pagos...</p>
                 </div>
             </div>
     </body>
+
+    <script src="js/perfil.js" defer></script>
 
     <%- include('footer') %>

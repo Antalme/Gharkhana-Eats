@@ -31,7 +31,9 @@ function enviarDatosRegistro() {
         data: {
             usuario: $("#usuario").val(),
             email: $("#email").val(),
-            pass: $("#pass").val()
+            pass: $("#pass").val(),
+            nombreCompleto: $("#nombreCompleto").val(),
+            direccion: $("#direccion").val()
         },
         success: function (data) {
             mostrarMensaje(data)
@@ -48,19 +50,19 @@ function camposCorrectos() {
     var mensaje = ""
 
     if (!$("#usuario").val()){
-        mensaje = "Debes introducir un nombre de usuario."
+        mensaje += " Debes introducir un nombre de usuario."
     }
     if (!$("#email").val()){
-        mensaje = "Debes introducir un email."
+        mensaje += " Debes introducir un email."
     }
     if (!$("#pass").val()){
-        mensaje = "Debes introducir una contraseña."
+        mensaje += " Debes introducir una contraseña."
     }
     if (!$("#nombreCompleto").val()){
-        mensaje = "Debes introducir tu real nombre completo."
+        mensaje += " Debes introducir tu nombre real completo."
     }
     if (!$("#direccion").val()){
-        mensaje = "Debes introducir la dirección de tu vivienda."
+        mensaje += " Debes introducir la dirección de tu vivienda."
     }
 
     return mensaje
