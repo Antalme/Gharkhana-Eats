@@ -213,33 +213,39 @@ app.post('/registro', function (req, res) {
     const username = req.body.usuario
     const email = req.body.email
     const pass = req.body.pass
+    const nombreCompleto = req.body.nombreCompleto
+    const direccion = req.body.direccion
 
-    console.log(username, email, pass)
-
-    const usuario = new Usuario({
-        nombre: username,
-        email: email,
-        pass: pass
-    })
+    console.log(username, email, pass, nombreCompleto, direccion) //TODO: Eliminar
 
     Usuario.findOne({ $or: [{ nombre: username }, { email: email }] }).then((usuarioExistente) => {
         if (usuarioExistente) {
-            res.send({
-                titulo: "¡Aviso!",
-                mensaje: "El nombre de usuario o el email que estás utilizando ya está en uso. ¡Prueba con otros diferentes!",
-                tipo: "warning"
-            })
+            if (usuarioExistente.nombre === username) {
+                res.send({
+                    titulo: "¡Aviso!",
+                    mensaje: "El nombre de usuario que estás utilizando ya está en uso. ¡Prueba con otros diferentes!",
+                    tipo: "warning"
+                })
+            } else {
+                res.send({
+                    titulo: "¡Aviso!",
+                    mensaje: "El email que estás utilizando ya está en uso. Si ya te has registrado, puedes intentar iniciar sesión.",
+                    tipo: "warning"
+                })
+            }
         } else {
-            const nuevoUsuario = new Usuario({
+            const usuario = new Usuario({
                 nombre: username,
                 email: email,
-                pass: pass
-            });
+                pass: pass,
+                nombreCompleto: nombreCompleto,
+                direccion: direccion
+            })
 
-            nuevoUsuario.save().then((result) => {
+            usuario.save().then((result) => {
                 res.send({
-                    titulo: "¡Registro éxito!",
-                    mensaje: "Tu cuenta se ha registrado con correctamete. Ahora puedes iniciar sesión",
+                    titulo: "¡Te has registrado con éxito!",
+                    mensaje: "Tu cuenta se ha registrado correctamete. Ahora puedes iniciar sesión.",
                     tipo: "success"
                 })
             }).catch((error) => {

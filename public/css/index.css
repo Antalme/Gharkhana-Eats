@@ -27,6 +27,8 @@
     font-weight: bold;
     padding: 60px;
     background-color: var(--color-fondoSecundario);
+    font-style: italic;
+    text-align: center;
 }
 
 #nombreCita{

@@ -13,6 +13,14 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    nombreCompleto: {
+        type: String,
+        require: true
+    },
+    direccion: {
+        type: String,
+        require: true
+    }
 }, { timestamps: true })
 
 const Usuario = mongoose.model("Usuario", usuarioSchema)

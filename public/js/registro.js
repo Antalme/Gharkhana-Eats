@@ -7,13 +7,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (paso == 1) {
             $("#formularioDatosPersonales").removeClass("oculto")
+            paso = 2
         } else {
-            enviarDatosRegistro()
+            mensajeError = camposCorrectos()
+
+            if (mensajeError == "") {
+                enviarDatosRegistro()
+            } else {
+                mostrarMensaje({
+                    titulo: "¡Aviso!",
+                    mensaje: mensajeError,
+                    tipo: "warning"
+                })
+            }
         }
     })
 })
 
-function enviarDatosRegistro(){
+function enviarDatosRegistro() {
     $.ajax({
         url: '/registro',
         method: 'POST',
@@ -30,4 +41,27 @@ function enviarDatosRegistro(){
             mostrarMensaje(error.responseText)
         }
     })
+}
+
+//Comprueba que todos los campos del formulario pasen por los requisitos necesarios.
+function camposCorrectos() {
+    var mensaje = ""
+
+    if (!$("#usuario").val()){
+        mensaje = "Debes introducir un nombre de usuario."
+    }
+    if (!$("#email").val()){
+        mensaje = "Debes introducir un email."
+    }
+    if (!$("#pass").val()){
+        mensaje = "Debes introducir una contraseña."
+    }
+    if (!$("#nombreCompleto").val()){
+        mensaje = "Debes introducir tu real nombre completo."
+    }
+    if (!$("#direccion").val()){
+        mensaje = "Debes introducir la dirección de tu vivienda."
+    }
+
+    return mensaje
 }
