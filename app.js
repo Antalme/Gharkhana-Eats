@@ -282,7 +282,7 @@ app.get('/obtener-usuarios', function (req, res) {
     })
 })
 
-//Devuelve el usuario pasado por GET
+//Devuelve el usuario pasado por parámetros
 app.get('/obtener-usuario', function (req, res) {
     Usuario.find().then((resultado) => {
         res.send(resultado)
@@ -291,6 +291,7 @@ app.get('/obtener-usuario', function (req, res) {
     })
 })
 
+//Elimina el usuario pasado por parámetros.
 app.post('/eliminar-usuario', function (req, res) {
     const { idUsuario } = req.body
 
@@ -319,6 +320,7 @@ app.post('/eliminar-usuario', function (req, res) {
         });
 })
 
+//Elimina a TODOS los usuarios pasados por parámetros.
 app.post('/eliminar-todos-usuarios', function (req, res) {
     Usuario.deleteMany({})
         .then(result => {
@@ -357,13 +359,16 @@ app.get('/obtener-platos', function (req, res) {
 })
 
 app.get('/obtener-plato', function (req, res) {
-    Plato.findById("662626b0a018fb0bdd33b33f").then((resultado) => {
+    const { idPlato } = req.body
+
+    Plato.findById(idPlato).then((resultado) => {
         res.send(resultado)
     }).catch((error) => {
         console.log("Error: " + error)
     })
 })
 
+//Obtiene las IDs de TODOS los platos
 app.get('/obtener-platos-ids', function (req, res) {
     Plato.find({}, '_id')
         .then(idsPlatos => {
@@ -375,6 +380,7 @@ app.get('/obtener-platos-ids', function (req, res) {
         });
 })
 
+//Guarda el plato usando los datos pasados por parámetros.
 app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
     const { idPlato, nombrePlato, ingredientesPlato, descripcionPlato } = req.body;
 
@@ -438,6 +444,7 @@ app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
     }
 })
 
+//Eliminar el plato pasado por parámetro.
 app.post('/eliminar-plato', function (req, res) {
     const { idPlato } = req.body
 
