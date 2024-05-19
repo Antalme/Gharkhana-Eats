@@ -28,7 +28,7 @@ const usuarioSchema = new mongoose.Schema({
     },
     rango: {
         type: String,
-        enum: ['Cliente', 'Repartido', 'Adminstrador'],
+        enum: ['Cliente', 'Repartidor', 'Administrador'],
         default: 'Cliente'
     }
 }, { timestamps: true })

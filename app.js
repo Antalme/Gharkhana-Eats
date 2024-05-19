@@ -3,6 +3,7 @@ const { Worker } = require('worker_threads')
 var worker = null
 const express = require("express")
 const session = require("express-session")
+const bodyParser = require('body-parser');
 const Stripe = require("stripe")
 const mongoose = require("mongoose")
 const MongoDBSession = require("connect-mongodb-session")(session)
@@ -26,11 +27,11 @@ const Menus = require("./schemes/Menus")
 
 const DB_URI = "mongodb+srv://hegispok:OMqUNsN286sFKvJt@clustergke0.xe4ond6.mongodb.net/gke?retryWrites=true&w=majority&appName=ClusterGKE0"
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(__dirname, 'favicon.ico'))); //Favicon
 app.use(express.static('public'));
 app.set("view engine", "ejs");
+app.use(bodyParser.raw({type: 'application/json'}));
 
 //Configura multer para manejar la carga de archivos
 const storage = multer.memoryStorage(); //Almacena la imagen en memoria
@@ -66,12 +67,34 @@ app.use(session({
     }
 }))
 
-//Middleware que evita que el usuario pase si no tiene la sesión iniciada.
+// ---------------------------------
+// ---------- Middlewares ----------
+// ---------------------------------
+
+//Evita que el usuario pase si no tiene la sesión iniciada.
 function necesitaRegistro(req, res, next) {
     if (req.session.isAuth) {
         return next();
     } else {
         res.redirect("/login")
+    }
+}
+
+//Evita que el usuario pase si no tiene el rango "Administrador".
+function necesitaAdministrador(req, res, next) {
+    if (req.session.rango == "Administrador") {
+        return next();
+    } else {
+        res.redirect("/")
+    }
+}
+
+//Evita que el usuario pase si no tiene el rango "Repartidor".
+function necesitaRepartidor(req, res, next) {
+    if (req.session.rango == "Repartidor") {
+        return next();
+    } else {
+        res.redirect("/")
     }
 }
 
@@ -127,8 +150,12 @@ app.get('/acercade', function (req, res) {
     res.render("acercade.ejs")
 })
 
-app.get('/administracion', function (req, res) {
+app.get('/administracion', necesitaAdministrador, function (req, res) {
     res.render("administracion.ejs")
+})
+
+app.get('/reparticion', necesitaRepartidor, function (req, res) {
+    res.render("reparticion.ejs")
 })
 
 app.post('/checkout-semanal', async function (req, res) {
@@ -154,6 +181,9 @@ app.post('/checkout-semanal', async function (req, res) {
 })
 
 app.post('/checkout-mensual', async function (req, res) {
+    const idUsuario = req.session.idUsuario.toString()
+    console.log("/checkout-mensual " + idUsuario)
+
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
@@ -163,18 +193,76 @@ app.post('/checkout-mensual', async function (req, res) {
         ],
         mode: 'subscription',
         success_url: 'http://localhost:3000/compra-exitosa',
-        cancel_url: 'http://localhost:3000/compra-cancelada'
+        cancel_url: 'http://localhost:3000/compra-cancelada',
+        client_reference_id: idUsuario
     })
     return res.json(session)
 });
 
 app.get('/compra-exitosa', function (req, res) {
+
     res.render("compra-exitosa.ejs")
 })
 
 app.get('/compra-cancelada', function (req, res) {
     res.render("planes.ejs")
 })
+
+// ---------------------------------
+// ------------ WEBHOOK ------------
+// ---------------------------------
+
+app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+    console.log("/webhookk")
+
+    const endpointSecret = "whsec_c2d37af2d1a208a7904fd85a9e67571299328551946678bc32e4073d69edfcb0";
+    const sig = request.headers['stripe-signature'];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+  
+    // Handle the event
+    console.log(`Unhandled event type ${event.type}`);
+  
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
+
+    /*const sig = request.headers['stripe-signature'];
+    const endpointSecret = 'we_1PI8MQCjZnfRslZLSTRQ8sSJ'; // Reemplaza con tu clave secreta de firma de webhook
+
+    let event;
+    let rawBody = '';
+
+    request.on('data', (chunk) => {
+        rawBody += chunk.toString();
+    });
+
+    try {
+        event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+        console.error('⚠️  Webhook signature verification failed.', err.message);
+        return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Manejo del evento checkout.session.completed
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const userId = session.client_reference_id;
+        const subscriptionId = session.subscription;
+
+        console.log(`User ID: ${userId}, Subscription ID: ${subscriptionId}`);
+        console.log("NO HAY NADA QUE SAVEAR COÑO")
+        //saveUserSubscription(userId, subscriptionId);  // Asegúrate de definir esta función
+    }
+
+    response.status(200).send();*/
+});
 
 // ---------------------------------
 // ----------- API REST ------------
@@ -193,6 +281,7 @@ app.post('/login', function (req, res) {
         if (usuarioExistente) {
             //Guarda los datos importantes del usuario en el objeto de la sesión.
             req.session.isAuth = true
+            req.session.idUsuario = usuarioExistente._id
             req.session.nombreUsuario = usuarioExistente.nombreUsuario;
             req.session.email = usuarioExistente.email;
             req.session.nombreCompleto = usuarioExistente.nombreCompleto;
@@ -200,7 +289,9 @@ app.post('/login', function (req, res) {
             req.session.planActual = usuarioExistente.planActual;
             req.session.fechaRegistro = usuarioExistente.createdAt;
             req.session.rango = usuarioExistente.rango;
-            
+
+            console.log("/login " + req.session.idUsuario)
+
             res.send({
                 titulo: "La abuelita te saluda",
                 mensaje: "¡Bienvenido a Gharkhana Eats!",
@@ -291,6 +382,32 @@ app.get('/obtener-usuario', function (req, res) {
     })
 })
 
+//Guarda los datos del usuario
+app.post('/cambiar-rango-usuario', function (req, res) {
+    const { idUsuario, rango } = req.body
+
+    Usuario.findById(idUsuario)
+        .then(usuario => {
+            usuario.rango = rango
+
+            return usuario.save()
+        })
+        .then(platoActualizado => {
+            res.send({
+                titulo: "¡Usuario actualizado!",
+                mensaje: "El usuario se ha actualizado con éxito.",
+                tipo: "success"
+            })
+        })
+        .catch(error => {
+            res.send({
+                titulo: "¡Error!",
+                mensaje: "El usuario no se ha podido actualizar:\n" + error,
+                tipo: "error"
+            })
+        })
+})
+
 //Elimina el usuario pasado por parámetros.
 app.post('/eliminar-usuario', function (req, res) {
     const { idUsuario } = req.body
@@ -316,8 +433,8 @@ app.post('/eliminar-usuario', function (req, res) {
                 titulo: "Error al eliminar",
                 mensaje: "Hubo un error al eliminar el usuario.",
                 tipo: "error"
-            });
-        });
+            })
+        })
 })
 
 //Elimina a TODOS los usuarios pasados por parámetros.
@@ -475,17 +592,54 @@ app.post('/eliminar-plato', function (req, res) {
 
 //[MENU]
 
+//Obtiene todos los menús y los platos de esos menús relacionados.
 app.get('/obtener-menus', function (req, res) {
-    Menus.find({})
-        .then(platosDia => {
-            res.status(200).json(platosDia)
+    Menus.aggregate([
+        {
+            $lookup: {
+                from: 'platos', // Nombre de la colección de platos en MongoDB
+                localField: 'idPlatoManana', // Campo en la colección de menús
+                foreignField: '_id', // Campo en la colección de platos
+                as: 'platoManana' // Nombre del campo resultante
+            }
+        },
+        {
+            $lookup: {
+                from: 'platos',
+                localField: 'idPlatoNoche',
+                foreignField: '_id',
+                as: 'platoNoche'
+            }
+        },
+        {
+            $unwind: {
+                path: '$platoManana',
+                preserveNullAndEmptyArrays: true // Permitir menús sin plato de mañana
+            }
+        },
+        {
+            $unwind: {
+                path: '$platoNoche',
+                preserveNullAndEmptyArrays: true // Permitir menús sin plato de noche
+            }
+        },
+        {
+            $addFields: {
+                platoManana: { $ifNull: ['$platoManana', null] },
+                platoNoche: { $ifNull: ['$platoNoche', null] }
+            }
+        }
+    ])
+        .then(menusConPlatos => {
+            res.status(200).json(menusConPlatos);
         })
         .catch(error => {
-            console.error("Error al obtener los platos del día:", error)
-            res.status(500).json({ error: "Error al obtener los platos del día" })
-        })
-})
+            console.error("Error al obtener los menús con platos:", error);
+            res.status(500).json({ error: "Error al obtener los menús con platos" });
+        });
+});
 
+//Guarda el menú pasado por parámetro.
 app.post('/guardar-menu', function (req, res) {
     const { fecha, idPlatoManana, idPlatoNoche } = req.body;
 
@@ -505,7 +659,7 @@ app.post('/guardar-menu', function (req, res) {
         });
 })
 
-//Elimina todos los menús que anteriores a la fecha actual.
+//Elimina todos los menús que son anteriores a la fecha actual.
 app.post('/eliminar-menus-anteriores', function (req, res) {
     //Obtiene la fecha actual
     var fechaActual = new Date()
@@ -525,3 +679,5 @@ app.post('/eliminar-menus-anteriores', function (req, res) {
             res.status(500).json({ error: "Error al eliminar los menus antiguos" })
         })
 })
+
+app.use(express.json());

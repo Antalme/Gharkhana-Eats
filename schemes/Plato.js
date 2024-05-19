@@ -3,15 +3,15 @@ const mongoose = require("mongoose")
 const platoSchema = new mongoose.Schema({
     nombre: {
         type: String,
-        require: true
+        required: true
     },
     descripcion: {
         type: String,
-        require: true
+        required: true
     },
     ingredientes: {
         type: String,
-        require: true
+        required: true
     },
     imagen: {
         data: Buffer,

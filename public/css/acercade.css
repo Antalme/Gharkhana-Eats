@@ -1,3 +1,8 @@
+.cuerpo {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
 .foto {
     width: 100%;
     text-align: center;

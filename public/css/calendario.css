@@ -1,15 +1,20 @@
 #menus {
     width: 100%;
+    margin-top: 40px;
     text-align: center;
 }
 
 .menu{
     width: 100%;
-    background-color: var(--color-fondoSecundario);
     border-radius: 20px;
     padding: 20px;
+    padding-bottom: 40px;
     margin-bottom: 40px;
-    text-align: left;
+    text-align: center;
+
+    background-color: var(--color-fondoSecundario);
+
+    display: inline-block
 }
 
 .fecha {
@@ -19,10 +24,24 @@
 
 .hora {
     width: 100%;
-    padding-left: 25px;
+    text-align: center;
 }
 
 .comida {
     width: 100%;
-    padding-left: 50px;
+    text-align: center;
+}
+
+.nombre{
+    font-weight: bold;
+}
+
+.foto {
+    max-height: 200px;
+    border-radius: 10px;
+}
+
+.cajaHora{
+    float: left;
+    width: 50%;
 }

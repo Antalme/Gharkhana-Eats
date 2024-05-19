@@ -34,12 +34,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     })
+    
+    $("#guardarUsuario").click(function () {
+        guardarUsuario()
+    })
+    
+
+    
 
     //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
     //para que se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
     $("#cargarFotoPlato").click(function () {
         $("#archivoInput").click();
     })
+    
     $("#archivoInput").change(function () {
         var archivo = event.target.files[0];
         // Verificar si se seleccionó un archivo
@@ -206,13 +214,16 @@ function cargarListaUsuarios() {
 
 //Carga los datos del usuario pasado por parámetro.
 function cargarDatosUsuario(usuario) {
+    //Habilita los botones de gestión de usuario
+    $("#guardarUsuario").prop("disabled", false);
+    $("#eliminarUsuario").prop("disabled", false);
+
+    //Carga los datos del usuario en los campos definidos
     $("#idUsuario").val(usuario._id)
-    $("#nombreUsuario").val(usuario.nombre)
+    $("#nombreUsuario").val(usuario.nombreUsuario)
     $("#emailUsuario").val(usuario.email)
     $("#passUsuario").val(usuario.pass)
-
-    var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
-    $("#imagenPlato").attr('src', imagenUrl)
+    $("#rangoUsuario").val(usuario.rango)
 }
 
 //Elimina el usuario de la base de datos utilizando su ID.
@@ -240,6 +251,25 @@ function eliminarTodosUsuarios() {
         method: 'POST',
         data: {
             idUsuario: $("#idUsuario").val(),
+        },
+        success: function (data) {
+            mostrarMensaje(data)
+        },
+        error: function (error) {
+            console.error(error)
+            mostrarMensaje(error.responseText)
+        }
+    })
+}
+
+//Actualiza el usuario seleccionado.
+function guardarUsuario() {   
+    $.ajax({
+        url: '/cambiar-rango-usuario',
+        method: 'POST',
+        data: {
+            idUsuario: $("#idUsuario").val(),
+            rango: $("#rangoUsuario").val()
         },
         success: function (data) {
             mostrarMensaje(data)

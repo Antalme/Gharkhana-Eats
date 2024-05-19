@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#platos').empty()
 
             response.forEach(function (plato) {
-                var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data);
+                var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
 
                 const divPlato = `
                 <div id="platos">

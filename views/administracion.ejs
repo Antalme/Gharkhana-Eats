@@ -53,7 +53,7 @@
                 <br>
                 <h3>Gestión de usuarios</h4>
                     <hr>
-                    <p>Ve y elimina usuarios.</p>
+                    <p>Modifica los rangos de los usuarios y visualiza sus datos.</p>
                     <div id="gestionUsuarios">
                         <div id="listaMasTotalUsuarios">
                             <div id="listaUsuarios">
@@ -74,8 +74,15 @@
                                     name="emailUsuario" placeholder="Email del usuario" disabled>
                                 <input type="text" class="form-control usuarioDato" id="passUsuario" name="passUsuario"
                                     placeholder="Contraseña del usuario" disabled>
+                                <select class="form-control usuarioDato" id="rangoUsuario" name="rangoUsuario">
+                                    <option value="Cliente">Cliente</option>
+                                    <option value="Repartidor">Repartidor</option>
+                                    <option value="Administrador">Administrador</option>
+                                </select>
                                 <div class="botonesUsuarios">
-                                    <button type="button" class="btn" id="eliminarUsuario">
+                                    <button type="button" class="btn" id="guardarUsuario" disabled>
+                                        <i class="fas fa-trash mr-1"></i>Guardar</button>
+                                    <button type="button" class="btn" id="eliminarUsuario" disabled>
                                         <i class="fas fa-trash mr-1"></i>Eliminar</button>
                                     <button type="button" class="btn" id="eliminarTodosUsuarios">
                                         <i class="fas fa-trash mr-1"></i>ELIMINAR TODOS</button>

@@ -3,17 +3,19 @@ const mongoose = require("mongoose")
 const menusSchema = new mongoose.Schema({
     fecha: {
         type: String,
-        require: true
+        required: true
     },
     idPlatoManana: {
-        type: String,
-        require: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Plato',
+        required: true
     },
     idPlatoNoche: {
-        type: String,
-        require: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Plato',
+        required: true
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 const Menus = mongoose.model("Menus", menusSchema)
 

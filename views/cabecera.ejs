@@ -18,7 +18,8 @@
         <a href="/acercade">Acerca de</a>
         <% if (session.rango == "Administrador") { %>
             <a href="/administracion">[ADMINISTRACIÓN]</a>
-            <% } else { %>
+        <% } else if (session.rango == "Repartidor") { %>
+            <a href="/reparticion">[REPARTICIÓN]</a>
         <% } %>
     </div>
 </div>

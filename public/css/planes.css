@@ -53,7 +53,9 @@
 }
 
 .descripcion {
-    font-size: 20px;
+    font-size: 19px;
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .precio {
