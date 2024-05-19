@@ -212,16 +212,16 @@ app.get('/compra-cancelada', function (req, res) {
 // ------------ WEBHOOK ------------
 // ---------------------------------
 
-app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
     console.log("/webhookk")
 
-    const endpointSecret = "whsec_c2d37af2d1a208a7904fd85a9e67571299328551946678bc32e4073d69edfcb0";
+    const endpointSecret = "we_1PI8MQCjZnfRslZLSTRQ8sSJ";
     const sig = request.headers['stripe-signature'];
 
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+      event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
       return;

@@ -57,5 +57,5 @@
 
     margin: 20px;
 
-    background-color: #752121;
+    background-color: var(--color-fondoSecundario);
 }
