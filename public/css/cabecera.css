@@ -16,6 +16,8 @@
         calc(-1 * var(--cabecera-texto-borde)) calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
         var(--cabecera-texto-borde) calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
         calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-borde) var(--cabecera-texto-color);
+
+        background-color: var(--color-fondoSecundario);
 }
 
 #derecha a:hover {

@@ -31,7 +31,7 @@
     text-align: center;
 }
 
-#nombreCita{
+#nombreCita {
     color: #b8b698;
     font-size: 22px;
     text-align: right;
@@ -40,10 +40,20 @@
 
 .cuerpoComidas {
     width: 100%;
+    padding-top: 50px;
     text-align: center;
     background-color: var(--color-fondoPrimario);
-    padding: 30px;
     overflow: hidden;
+}
+
+.comidas {
+    width: 100%;
+    padding-bottom: 60px;
+}
+
+.comidasIzquierda {
+    width: 80%;
+    float: left;
 
     display: flex;
     justify-content: center;
@@ -51,11 +61,42 @@
     flex-wrap: wrap;
 }
 
+.comidasDerecha {
+    float: right;
+}
+
 .cuerpoItemComidaPromocionada {
-    width: 300px;
-    height: 350px;
-
+    width: 350px;
     margin: 20px;
+}
 
+.nombrePlato {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.imagen {
+    max-width: 100%;
+}
+
+.cuerpoCaracteristicas {
+    width: 100%;
+    padding: 50px 100px 0px 0px;
+    text-align: left;
     background-color: var(--color-fondoSecundario);
+    overflow: hidden;
+}
+
+.caracteristicasTextoDivIzquierda {
+    float: left;
+    width: 35%;
+}
+
+.caracteristicasTextoDivDerecha {
+    float: left;
+    width: 65%;
+
+    text-align: justify;
+    font-weight: bold;
+    font-size: 20px;
 }

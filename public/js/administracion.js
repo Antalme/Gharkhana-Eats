@@ -215,8 +215,8 @@ function cargarListaUsuarios() {
 //Carga los datos del usuario pasado por parámetro.
 function cargarDatosUsuario(usuario) {
     //Habilita los botones de gestión de usuario
-    $("#guardarUsuario").prop("disabled", false);
-    $("#eliminarUsuario").prop("disabled", false);
+    $("#guardarUsuario").prop("disabled", false)
+    $("#eliminarUsuario").prop("disabled", false)
 
     //Carga los datos del usuario en los campos definidos
     $("#idUsuario").val(usuario._id)
