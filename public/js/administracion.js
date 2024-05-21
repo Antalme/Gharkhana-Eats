@@ -39,9 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
         guardarUsuario()
     })
     
-
-    
-
     //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
     //para que se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
     $("#cargarFotoPlato").click(function () {
@@ -224,6 +221,7 @@ function cargarDatosUsuario(usuario) {
     $("#emailUsuario").val(usuario.email)
     $("#passUsuario").val(usuario.pass)
     $("#rangoUsuario").val(usuario.rango)
+    $("#planUsuario").val(usuario.planActual)
 }
 
 //Elimina el usuario de la base de datos utilizando su ID.

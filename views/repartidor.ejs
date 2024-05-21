@@ -1,0 +1,51 @@
+<%- include('head') %>
+    <link href="css/reparticion.css" rel="stylesheet">
+
+<!--     <body>
+        <%- include('cabecera') %>
+            <div class="cuerpo">
+                <h2>Área de gestión de envíos del repartidor</h2>
+                <hr>
+                <p>Desde aquí se pueden ver todos los platos que se han de entregar, así como los nombres de usuario al
+                    los que pertenecen y sus direcciones de entrega.</p>
+                <br>
+                <h3>Entregas</h3>
+                <hr>
+                
+    </body>
+
+    <script src="js/repartidor.js" defer></script> -->
+    <head>
+        <title>Generar ruta en Google Maps</title>
+    </head>
+    <body>
+        <h1>Generar ruta en Google Maps</h1>
+    
+        <!-- Direcciones de entrada -->
+        <div>
+            <input type="text" id="address1" placeholder="Dirección 1" value="1600 Amphitheatre Parkway, Mountain View, CA">
+            <input type="text" id="address2" placeholder="Dirección 2" value="1 Infinite Loop, Cupertino, CA">
+            <input type="text" id="address3" placeholder="Dirección 3" value="350 Fifth Avenue, New York, NY">
+        </div>
+        
+        <!-- Botón para generar la ruta -->
+        <button onclick="generateRoute()">Generar Ruta</button>
+    
+        <script>
+            function generateRoute() {
+                // Obtener las direcciones de los inputs
+                const address1 = document.getElementById('address1').value;
+                const address2 = document.getElementById('address2').value;
+                const address3 = document.getElementById('address3').value;
+    
+                // Construir la URL de Google Maps
+                const baseUrl = 'https://www.google.com/maps/dir/';
+                const routeUrl = `${baseUrl}${encodeURIComponent(address1)}/${encodeURIComponent(address2)}/${encodeURIComponent(address3)}/`;
+    
+                // Abrir la URL en una nueva pestaña
+                window.open(routeUrl, '_blank');
+            }
+        </script>
+    </body>
+
+    <%- include('footer') %>

@@ -31,7 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(__dirname, 'favicon.ico'))); //Favicon
 app.use(express.static('public'));
 app.set("view engine", "ejs");
-app.use(bodyParser.raw({type: 'application/json'}));
+//app.use(bodyParser.raw({type: 'application/json'}));
+app.use(express.json({
+    limit: '5mb',
+    verify: (req, res, buf) => {
+        req.rawBody = buf.toString();
+    }
+}));
 
 //Configura multer para manejar la carga de archivos
 const storage = multer.memoryStorage(); //Almacena la imagen en memoria
@@ -154,8 +160,8 @@ app.get('/administracion', necesitaAdministrador, function (req, res) {
     res.render("administracion.ejs")
 })
 
-app.get('/reparticion', necesitaRepartidor, function (req, res) {
-    res.render("reparticion.ejs")
+app.get('/repartidor', necesitaRepartidor, function (req, res) {
+    res.render("repartidor.ejs")
 })
 
 app.post('/checkout-semanal', async function (req, res) {
@@ -175,15 +181,17 @@ app.post('/checkout-semanal', async function (req, res) {
         ],
         mode: 'payment',
         success_url: 'http://localhost:3000/compra-exitosa',
-        cancel_url: 'http://localhost:3000/compra-cancelada'
+        cancel_url: 'http://localhost:3000/compra-cancelada',
+        client_reference_id: req.session.idUsuario.toString(),
+        metadata: {
+            planComprado: 'Plan semanal',
+        }
     })
+
     return res.json(session)
 })
 
 app.post('/checkout-mensual', async function (req, res) {
-    const idUsuario = req.session.idUsuario.toString()
-    console.log("/checkout-mensual " + idUsuario)
-
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
@@ -194,8 +202,12 @@ app.post('/checkout-mensual', async function (req, res) {
         mode: 'subscription',
         success_url: 'http://localhost:3000/compra-exitosa',
         cancel_url: 'http://localhost:3000/compra-cancelada',
-        client_reference_id: idUsuario
+        client_reference_id: req.session.idUsuario.toString(),
+        metadata: {
+            planComprado: 'Plan mensual',
+        }
     })
+
     return res.json(session)
 });
 
@@ -212,57 +224,33 @@ app.get('/compra-cancelada', function (req, res) {
 // ------------ WEBHOOK ------------
 // ---------------------------------
 
-app.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', async (req, res) => {
     console.log("/webhookk")
 
-    const endpointSecret = "we_1PI8MQCjZnfRslZLSTRQ8sSJ";
-    const sig = request.headers['stripe-signature'];
+    const endpointSecret = "we_1PI8MQCjZnfRslZLSTRQ8sSJ"
+    const sig = req.headers['stripe-signature']
 
-    let event;
-
-    try {
-      event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
-    } catch (err) {
-      response.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-  
-    // Handle the event
-    console.log(`Unhandled event type ${event.type}`);
-  
-    // Return a 200 response to acknowledge receipt of the event
-    response.send();
-
-    /*const sig = request.headers['stripe-signature'];
-    const endpointSecret = 'we_1PI8MQCjZnfRslZLSTRQ8sSJ'; // Reemplaza con tu clave secreta de firma de webhook
-
-    let event;
-    let rawBody = '';
-
-    request.on('data', (chunk) => {
-        rawBody += chunk.toString();
-    });
+    let event
 
     try {
-        event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+        const datos = JSON.parse(req.rawBody)
+        const idUsuario = datos.data.object.client_reference_id
+
+        const usuario = await Usuario.findById(idUsuario);
+        if (!usuario) {
+            throw new Error('Usuario "' + idUsuario + '" no encontrado');
+        }
+
+        usuario.planActual = datos.data.object.metadata.planComprado;
+        await usuario.save();
+
+        res.status(200).send();
     } catch (err) {
-        console.error('⚠️  Webhook signature verification failed.', err.message);
-        return response.status(400).send(`Webhook Error: ${err.message}`);
+        console.error('⚠️  Webhook signature verification failed.', err.message)
+        return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    // Manejo del evento checkout.session.completed
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        const userId = session.client_reference_id;
-        const subscriptionId = session.subscription;
-
-        console.log(`User ID: ${userId}, Subscription ID: ${subscriptionId}`);
-        console.log("NO HAY NADA QUE SAVEAR COÑO")
-        //saveUserSubscription(userId, subscriptionId);  // Asegúrate de definir esta función
-    }
-
-    response.status(200).send();*/
-});
+})
 
 // ---------------------------------
 // ----------- API REST ------------
@@ -392,7 +380,7 @@ app.post('/cambiar-rango-usuario', function (req, res) {
 
             return usuario.save()
         })
-        .then(platoActualizado => {
+        .then(usuarioActualizado => {
             res.send({
                 titulo: "¡Usuario actualizado!",
                 mensaje: "El usuario se ha actualizado con éxito.",
@@ -680,4 +668,4 @@ app.post('/eliminar-menus-anteriores', function (req, res) {
         })
 })
 
-app.use(express.json());
+//app.use(express.json());
