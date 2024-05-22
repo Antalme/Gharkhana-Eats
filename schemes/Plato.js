@@ -1,5 +1,21 @@
 const mongoose = require("mongoose")
 
+const ingredienteSchema = new mongoose.Schema({
+    nombre: {
+        type: String,
+        required: true
+    },
+    cantidad: {
+        type: Number,
+        required: true
+    },
+    unidad: {
+        type: String,
+        enum: ['Kilogramos', 'Litros'],
+        required: true
+    }
+})
+
 const platoSchema = new mongoose.Schema({
     nombre: {
         type: String,
@@ -10,7 +26,7 @@ const platoSchema = new mongoose.Schema({
         required: true
     },
     ingredientes: {
-        type: String,
+        type: [ingredienteSchema],
         required: true
     },
     imagen: {
@@ -21,4 +37,4 @@ const platoSchema = new mongoose.Schema({
 
 const Plato = mongoose.model("Plato", platoSchema)
 
-module.exports = Plato;
+module.exports = Plato

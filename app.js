@@ -95,6 +95,14 @@ function necesitaAdministrador(req, res, next) {
     }
 }
 
+function necesitaCocinero(req, res, next) {
+    if (req.session.rango == "Cocinero") {
+        return next();
+    } else {
+        res.redirect("/")
+    }
+}
+
 //Evita que el usuario pase si no tiene el rango "Repartidor".
 function necesitaRepartidor(req, res, next) {
     if (req.session.rango == "Repartidor") {
@@ -158,6 +166,10 @@ app.get('/acercade', function (req, res) {
 
 app.get('/administracion', necesitaAdministrador, function (req, res) {
     res.render("administracion.ejs")
+})
+
+app.get('/cocinero', necesitaCocinero, function (req, res) {
+    res.render("cocinero.ejs")
 })
 
 app.get('/repartidor', necesitaRepartidor, function (req, res) {

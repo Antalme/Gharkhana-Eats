@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (paso == 1) {
             $("#formularioDatosPersonales").removeClass("oculto")
+            $("#nombreCompleto").focus()
             paso = 2
         } else {
             mensajeError = camposCorrectos()
