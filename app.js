@@ -176,6 +176,10 @@ app.get('/repartidor', necesitaRepartidor, function (req, res) {
     res.render("repartidor.ejs")
 })
 
+app.get('/test', function (req, res) {
+    res.render("test.ejs")
+})
+
 app.post('/checkout-semanal', async function (req, res) {
     const session = await stripe.checkout.sessions.create({
         line_items: [

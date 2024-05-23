@@ -1,13 +1,3 @@
-.cuerpo {
-    width: 100%;
-    height: 100%;
-    padding-top: 120px;
-    padding-left: 20%;
-    padding-right: 20%;
-
-    background-color: var(--color-fondoPrimario);
-}
-
 .planes {
     width: 100%;
     height: 480px;

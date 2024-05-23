@@ -1,0 +1,74 @@
+<%- include('head') %>
+    <link href="css/test.css" rel="stylesheet">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Layout Reactivo</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            .container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+    
+            .container > div {
+                flex: 1;
+                margin: 10px;
+            }
+    
+            .left, .right {
+                background-color: lightcoral;
+                flex: 1;
+                max-width: 33%;
+            }
+    
+            .center {
+                background-color: lightblue;
+                flex: 1 1 auto;
+                max-width: 34%;
+            }
+    
+            @media (max-width: 768px) {
+                .left, .right {
+                    max-width: 20%;
+                    flex: 1 1 20%;
+                }
+    
+                .center {
+                    max-width: 60%;
+                    flex: 1 1 60%;
+                }
+            }
+    
+            @media (max-width: 480px) {
+                .left, .right {
+                    max-width: 15%;
+                    flex: 1 1 15%;
+                }
+    
+                .center {
+                    max-width: 70%;
+                    flex: 1 1 70%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="left">Izquierda</div>
+            <div class="center">Centro</div>
+            <div class="right">Derecha</div>
+        </div>
+    </body>
+
+    <script src="js/test.js" defer></script>
+
+
+    <%- include('footer') %>

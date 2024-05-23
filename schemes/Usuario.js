@@ -25,7 +25,7 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         enum: ['Sin plan', 'Plan semanal', 'Plan mensual'],
         default: 'Sin plan'
-    },
+    },)
     rango: {
         type: String,
         enum: ['Cliente', 'Cocinero', 'Repartidor', 'Administrador'],

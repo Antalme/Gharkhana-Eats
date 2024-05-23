@@ -52,11 +52,31 @@ hr {
     width: 100%;
     height: 100%;
     padding-top: 120px;
-    padding-left: 20%;
-    padding-right: 20%;
+    padding-left: 15%;
+    padding-right: 15%;
 
     font-size: 18px;
     background-color: var(--color-fondoPrimario)
+}
+
+@media (max-width: 1400px) {
+    .cuerpo {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .cuerpo {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .cuerpo {
+        width: 1000px;
+    }
 }
 
 /* Scrollbar */
