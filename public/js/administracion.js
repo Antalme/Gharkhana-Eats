@@ -1,3 +1,5 @@
+var ingredienteNumero = 0
+
 document.addEventListener('DOMContentLoaded', function () {
     cargarListaPlatos()
     cargarListaUsuarios()
@@ -34,17 +36,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     })
-    
+
     $("#guardarUsuario").click(function () {
         guardarUsuario()
     })
-    
+
+    $("#anadirIngrediente").click(function () {
+        const ingredientes = $("#nombreIngrediente").val()
+        const cantidad = $("#cantidadIngrediente").val()
+        const unidad = $('input[name="unidadMedida"]:checked').val()
+
+        anadirIngrediente(ingredientes, cantidad, unidad)
+    })
+
+    $("#eliminarIngredientes").click(function () {
+        eliminarIngrediente()
+    })
+
     //Al pulsar en el botón de subir foto, simula que se ha hecho click en unbotón tipo fileinput
     //para que se abra el examniador de archivos del sistema operativo permitiendo elegir una foto.
     $("#cargarFotoPlato").click(function () {
         $("#archivoInput").click();
     })
-    
+
     $("#archivoInput").change(function () {
         var archivo = event.target.files[0];
         // Verificar si se seleccionó un archivo
@@ -143,6 +157,11 @@ function guardarPlato() {
     formData.append('descripcionPlato', $("#descripcionPlato").val());
     formData.append('imagen', archivo);
 
+    //Obtiene los ingredientes
+    var ingredientes = []
+
+
+
     $.ajax({
         url: '/guardar-plato',
         method: 'POST',
@@ -176,6 +195,14 @@ function eliminarPlato(idPlato) {
         }
     })
 }
+
+function cargarDatosIngrediente(numero, ingrediente, cantidad, unidad) {
+    $("#numeroIngrediente").val(numero)
+    $("#nombreIngrediente").val(ingrediente)
+    $("#cantidadIngrediente").val(cantidad)
+    $('input[name="unidadMedida"][value="' + unidad + '"]').prop('checked', true);
+}
+
 
 /*
 Hace una petición AJAX para cargar y poblar la lista de usuarios 
@@ -261,7 +288,7 @@ function eliminarTodosUsuarios() {
 }
 
 //Actualiza el usuario seleccionado.
-function guardarUsuario() {   
+function guardarUsuario() {
     $.ajax({
         url: '/cambiar-rango-usuario',
         method: 'POST',
@@ -278,3 +305,19 @@ function guardarUsuario() {
         }
     })
 }
+
+//Actualiza el usuario seleccionado.
+function anadirIngrediente(ingrediente, cantidad, unidad) {
+    ingredienteNumero++
+    
+    $("#listaIngredientes").append(`
+        <div id="ingrediente_${ingredienteNumero}" class="ingrediente">
+            ${ingrediente}: ${cantidad} ${unidad}
+        </div>
+    `)
+
+    $(`#ingrediente_${ingredienteNumero}`).click(function () {
+        cargarDatosIngrediente(ingredienteNumero, ingrediente, cantidad, unidad)
+    });
+}
+

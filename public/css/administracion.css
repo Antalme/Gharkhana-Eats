@@ -18,14 +18,14 @@
     padding: 10px;
 }
 
-#listaPlatos {
+.lista {
     width: 100%;
     height: 95%;
     padding: 10px;
     overflow-y: scroll;
 }
 
-#sublistaPlatos {
+.sublista {
     width: 100%;
     height: 5%;
     text-align: center;
@@ -54,6 +54,18 @@
     padding: 5px;
     background-color: var(--color-fondoSecundario);
     border-radius: 5px;
+}
+
+.ingrediente {
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: var(--color-fondoSecundario);
+    border-radius: 5px;
+}
+
+.unidadMedida{
+    font-size: 16px;
 }
 
 /* Gestión usuarios*/
@@ -135,4 +147,10 @@
 #cargando {
     width: 100%;
     text-align: center;
+}
+
+.separador {
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-terciario);
 }
