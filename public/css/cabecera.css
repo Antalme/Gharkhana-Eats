@@ -17,7 +17,9 @@
         var(--cabecera-texto-borde) calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-color),
         calc(-1 * var(--cabecera-texto-borde)) var(--cabecera-texto-borde) var(--cabecera-texto-color);
 
-        background-color: var(--color-fondoSecundario);
+    background-color: var(--color-fondoSecundario);
+
+    border-bottom: solid 2px;
 }
 
 #derecha a:hover {
@@ -45,6 +47,6 @@
     transition: color 0.3s;
 }
 
-#logo{
+#logo {
     max-height: 100%;
 }

@@ -11,7 +11,7 @@ const ingredienteSchema = new mongoose.Schema({
     },
     unidad: {
         type: String,
-        enum: ['Gramos', 'Mililitros'],
+        enum: ['Gramos', 'Mililitros', 'Unidades'],
         required: true
     }
 })

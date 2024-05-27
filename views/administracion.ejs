@@ -34,8 +34,6 @@
                                 placeholder="Nombre del plato" required>
                             <textarea class="form-control platoDato" id="descripcionPlato" name="descripcionPlato"
                                 placeholder="Descripción" required></textarea>
-                            <input type="text" class="form-control platoDato" id="ingredientesPlato"
-                                name="ingredientesPlato" placeholder="Ingredientes" required>
                             <div class="botonesPlatos">
                                 <button type="button" class="btn" id="limpiarPlato">
                                     <i class="fas fa-plus mr-1"></i>Nuevo</button>
@@ -51,30 +49,34 @@
                     </div>
                 </div>
                 <div class="separador"></div>
-                <div id="listaMasTotalPlatos">
-                    <div class="lista" id="listaIngredientes">
-                    </div>
-                    <div class="subLista" id="sublistaIngredientes"></div>
-                </div>
-                <div id="datosPlatos">
-                    <div class="contenedorDatos">
-                        <input type="text" class="form-control platoDato" id="numeroIngrediente"
-                            name="numeroIngrediente" placeholder="Número de ingrediente" disabled>
-                        <input type="text" class="form-control platoDato" id="nombreIngrediente"
-                            name="nombreIngrediente" placeholder="Ingrediente" required>
-                        <input type="text" class="form-control platoDato" id="cantidadIngrediente"
-                            name="cantidadIngrediente" placeholder="Cantidad" required>
-                        <div class="unidadMedida">
-                            <input type="radio" id="gramos" name="unidadMedida" value="Gramos">
-                            <label for="Gramos">Gramos</label>
-                            <input type="radio" id="mililitros" name="unidadMedida" value="Mililitros">
-                            <label for="Mililitros">Mililitros</label>
+                <div id="gestionPlatos">
+                    <div id="listaMasTotalPlatos">
+                        <div class="lista" id="listaIngredientes">
                         </div>
-                        <div class="botonesPlatos">
-                            <button type="button" class="btn" id="anadirIngrediente">
-                                <i class="fas fa-plus mr-1"></i>Añadir</button>
-                            <button type="button" class="btn" id="eliminarIngrediente">
-                                <i class="fas fa-trash mr-1"></i>Eliminar</button>
+                        <div class="subLista" id="sublistaIngredientes"></div>
+                    </div>
+                    <div id="datosPlatos">
+                        <div class="contenedorDatos">
+                            <input type="text" class="form-control platoDato" id="numeroIngrediente"
+                                name="numeroIngrediente" placeholder="Número de ingrediente" disabled>
+                            <input type="text" class="form-control platoDato" id="nombreIngrediente"
+                                name="nombreIngrediente" placeholder="Ingrediente" required>
+                            <input type="number" class="form-control platoDato" id="cantidadIngrediente"
+                                name="cantidadIngrediente" placeholder="Cantidad" required>
+                            <div class="unidadMedida">
+                                <input type="radio" id="gramos" name="unidadMedida" value="Gramos">
+                                <label for="Gramos">Gramos</label>
+                                <input type="radio" id="mililitros" name="unidadMedida" value="Mililitros">
+                                <label for="Mililitros">Mililitros</label>
+                                <input type="radio" id="unidades" name="unidadMedida" value="Unidades">
+                                <label for="Unidades">Unidades</label>
+                            </div>
+                            <div class="botonesPlatos">
+                                <button type="button" class="btn" id="anadirIngrediente">
+                                    <i class="fas fa-plus mr-1"></i>Añadir</button>
+                                <button type="button" class="btn" id="eliminarIngrediente" disabled>
+                                    <i class="fas fa-trash mr-1"></i>Eliminar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -154,3 +154,9 @@
     height: 1px;
     background-color: var(--color-terciario);
 }
+
+.ingrediente > a {
+    text-decoration: none !important;
+    color: black;
+    pointer-events: none;
+}

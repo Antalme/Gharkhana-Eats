@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
             response.forEach(function (plato) {
                 var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
 
+                const ingredientes = plato.ingredientes.map(ingrediente => `${ingrediente.nombre}`).join(', ');
+
                 const divPlato = `
                 <div id="platos">
                     <div class="plato">
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="datos">
                             <div class="titulo">${plato.nombre}</div>
-                            <div class="ingredientes">${plato.ingredientes}</div>
+                            <div class="ingredientes">${ingredientes}</div>
                             <div class="desc">${plato.descripcion}</div>
                         </div>
                     </div>

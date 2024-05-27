@@ -15,8 +15,6 @@ function cargarMenus() {
                 var imagenUrl_manana = 'data:' + menu.platoManana.imagen.contentType + ';base64,' + menu.platoManana.imagen.data
                 var imagenUrl_noche = 'data:' + menu.platoNoche.imagen.contentType + ';base64,' + menu.platoNoche.imagen.data
 
-                console.log(menu.platoNoche.imagen.data)
-
                 const divMenu = `
                     <div class="menu">
                         <div class="fecha">

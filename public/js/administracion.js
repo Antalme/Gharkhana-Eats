@@ -1,4 +1,4 @@
-var ingredienteNumero = 0
+let ingredienteNumero = 0
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarListaPlatos()
@@ -46,7 +46,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const cantidad = $("#cantidadIngrediente").val()
         const unidad = $('input[name="unidadMedida"]:checked').val()
 
-        anadirIngrediente(ingredientes, cantidad, unidad)
+        anadirIngrediente(true, ingredientes, cantidad, unidad)
+    })
+
+    $("#eliminarIngrediente").click(function () {
+        const numeroIngrediente = $("#numeroIngrediente").val()
+
+        eliminarIngrediente(numeroIngrediente)
     })
 
     $("#eliminarIngredientes").click(function () {
@@ -119,13 +125,70 @@ function limpiarCamposPlato() {
 
 //Carga los datos del plato pasado por parámetro.
 function cargarDatosPlato(plato) {
+    $("#listaIngredientes").empty()
+    
     $("#idPlato").val(plato._id)
     $("#nombrePlato").val(plato.nombre)
     $("#ingredientesPlato").val(plato.ingredientes)
     $("#descripcionPlato").val(plato.descripcion)
 
+    ingredienteNumero = 0
+    for (var i = 0; i < plato.ingredientes.length; i++) {
+        var ingrediente = plato.ingredientes[i]
+
+        const nombre = ingrediente.nombre
+        const cantidad = ingrediente.cantidad
+        const unidad = ingrediente.unidad
+
+        anadirIngrediente(false, nombre, cantidad, unidad)
+    }
+
     var imagenUrl = 'data:' + plato.imagen.contentType + ';base64,' + arrayBufferToBase64(plato.imagen.data)
     $("#imagenPlato").attr('src', imagenUrl)
+}
+
+/*
+Añade o actualiza el ingrediente con los datos que se han introducido.
+needCheck es un flag que permite saltarse el checkeo de los campos introducidos
+para permitir la introducción de ingredientes de forma automática.
+*/
+function anadirIngrediente(needCheck, ingrediente, cantidad, unidad) {
+    if (needCheck) {
+        if ($("#nombreIngrediente").val() == "") {
+            mostrarMensaje({ titulo: "Ingrediente no introducido", mensaje: "Debes introducir el nombre del ingrediente", tipo: "warning" });
+            return
+        }
+
+        if ($("#cantidadIngrediente").val() == "") {
+            mostrarMensaje({ titulo: "Cantidad no introducida", mensaje: "Debes introducir la cantidad del ingrediente", tipo: "warning" });
+            return
+        }
+
+        if (!$("input[name='unidadMedida']:checked").val()) {
+            mostrarMensaje({ titulo: "Unidad de medida no seleccionada", mensaje: "Debes seleccionar la unidad de medida del ingrediente", tipo: "warning" });
+            return;
+        }
+    }
+
+    ingredienteNumero++
+
+    $("#listaIngredientes").append(`
+        <div id="ingrediente_${ingredienteNumero}" class="ingrediente">
+            <a class="ingredienteNombre" id="ingredienteNombre_${ingredienteNumero}">${ingrediente}</a>: <a class="ingredienteCantidad" id="ingredienteCantidad_${ingredienteNumero}">${cantidad}</a>  <a class="ingredienteUnidad" id="ingredienteUnidad_${ingredienteNumero}">${unidad}</a>
+        </div>
+    `);
+
+    (function (numero) {
+        $(`#ingrediente_${numero}`).click(function () {
+            cargarDatosIngrediente(numero, ingrediente, cantidad, unidad);
+        });
+    })(ingredienteNumero);
+}
+
+//Eliminar el ingrediente seleccionado.
+function eliminarIngrediente(numeroIngrediente) {
+    $("#ingrediente_" + numeroIngrediente).remove()
+    $("#eliminarIngrediente").prop("disabled", true)
 }
 
 //Guardar o edita el plato dependiendo de si el campo ID tiene algo escrito.
@@ -139,28 +202,33 @@ function guardarPlato() {
         mostrarMensaje({ titulo: "Descripción no introducida", mensaje: "El plato debe tener una descripción", tipo: "warning" });
         return
     }
-    if ($("#ingredientesPlato").val() == "") {
-        mostrarMensaje({ titulo: "Ingredientes no introducidos", mensaje: "Se debe especificar los ingredientes que lleva el plato", tipo: "warning" });
-        return
-    }
     if ($("#archivoInput").val() == "") {
         mostrarMensaje({ titulo: "Foto no cargada", mensaje: "Se debe cargar una imagen que represente al plato", tipo: "warning" });
         return
     }
 
-    var formData = new FormData();
-    var archivo = $('#archivoInput').get(0).files[0];
+    var formData = new FormData()
+    var archivo = $('#archivoInput').get(0).files[0]
 
-    formData.append('idPlato', $("#idPlato").val());
-    formData.append('nombrePlato', $("#nombrePlato").val());
-    formData.append('ingredientesPlato', $("#ingredientesPlato").val());
-    formData.append('descripcionPlato', $("#descripcionPlato").val());
-    formData.append('imagen', archivo);
+    formData.append('idPlato', $("#idPlato").val())
+    formData.append('nombrePlato', $("#nombrePlato").val())
+    formData.append('descripcionPlato', $("#descripcionPlato").val())
+    formData.append('imagen', archivo)
 
     //Obtiene los ingredientes
     var ingredientes = []
 
+    $(".ingrediente").each(function (index, element) {
+        var $element = $(element);
+    
+        const nombreIngrediente = $element.find(".ingredienteNombre").text()
+        const cantidadIngrediente = $element.find(".ingredienteCantidad").text()
+        const medidaIngrediente = $element.find(".ingredienteUnidad").text()
 
+        ingredientes.push({ nombre: nombreIngrediente, cantidad: Number(cantidadIngrediente), unidad: medidaIngrediente })
+    })
+
+    formData.append('ingredientesPlato', JSON.stringify(ingredientes))
 
     $.ajax({
         url: '/guardar-plato',
@@ -201,6 +269,8 @@ function cargarDatosIngrediente(numero, ingrediente, cantidad, unidad) {
     $("#nombreIngrediente").val(ingrediente)
     $("#cantidadIngrediente").val(cantidad)
     $('input[name="unidadMedida"][value="' + unidad + '"]').prop('checked', true);
+
+    $("#eliminarIngrediente").prop("disabled", false)
 }
 
 
@@ -305,19 +375,3 @@ function guardarUsuario() {
         }
     })
 }
-
-//Actualiza el usuario seleccionado.
-function anadirIngrediente(ingrediente, cantidad, unidad) {
-    ingredienteNumero++
-    
-    $("#listaIngredientes").append(`
-        <div id="ingrediente_${ingredienteNumero}" class="ingrediente">
-            ${ingrediente}: ${cantidad} ${unidad}
-        </div>
-    `)
-
-    $(`#ingrediente_${ingredienteNumero}`).click(function () {
-        cargarDatosIngrediente(ingredienteNumero, ingrediente, cantidad, unidad)
-    });
-}
-

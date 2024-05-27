@@ -1,0 +1,8 @@
+#centro {
+    text-align: center;
+}
+
+.boton {
+    background-color: var(--color-primario);
+    color: var(--color-fondoPrimario);
+}

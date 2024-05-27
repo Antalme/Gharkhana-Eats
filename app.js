@@ -294,8 +294,6 @@ app.post('/login', function (req, res) {
             req.session.fechaRegistro = usuarioExistente.createdAt;
             req.session.rango = usuarioExistente.rango;
 
-            console.log("/login " + req.session.idUsuario)
-
             res.send({
                 titulo: "La abuelita te saluda",
                 mensaje: "¡Bienvenido a Gharkhana Eats!",
@@ -503,7 +501,8 @@ app.get('/obtener-platos-ids', function (req, res) {
 
 //Guarda el plato usando los datos pasados por parámetros.
 app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
-    const { idPlato, nombrePlato, ingredientesPlato, descripcionPlato } = req.body;
+    var { idPlato, nombrePlato, descripcionPlato, ingredientesPlato } = req.body
+    ingredientesPlato = JSON.parse(ingredientesPlato)
 
     //Convierte la imagen a un Buffer y obtiene su tipo de contenido
     const imagenData = req.file.buffer;
@@ -514,13 +513,13 @@ app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
         // Encontrar el plato existente en la base de datos
         Plato.findById(idPlato)
             .then(platoExistente => {
-                platoExistente.nombre = nombrePlato;
-                platoExistente.descripcion = descripcionPlato;
-                platoExistente.ingredientes = ingredientesPlato;
-                platoExistente.imagen.data = req.file.buffer;
-                platoExistente.imagen.contentType = req.file.mimetype;
+                platoExistente.nombre = nombrePlato
+                platoExistente.descripcion = descripcionPlato
+                platoExistente.ingredientes = ingredientesPlato
+                platoExistente.imagen.data = req.file.buffer
+                platoExistente.imagen.contentType = req.file.mimetype
 
-                return platoExistente.save();
+                return platoExistente.save()
             })
             .then(platoActualizado => {
                 res.send({
@@ -684,4 +683,58 @@ app.post('/eliminar-menus-anteriores', function (req, res) {
         })
 })
 
-//app.use(express.json());
+/*
+Obtiene la cantidad total de ingredientes necesarios para cada uno de los platos
+considerando la cantidad de usuarios cuyo plan actual sea "Plan semanal" o "Plan mensual".
+*/
+app.get('/obtener-cantidad-ingredientes', async function (req, res) {
+    try {
+        // Encuentra todos los usuarios cuyo plan actual sea "Plan semanal" o "Plan mensual"
+        const usuarios = await Usuario.find({
+            planActual: { $in: ['Plan semanal', 'Plan mensual'] }
+        });
+
+        // Objeto para almacenar la cantidad total de ingredientes necesarios para cada plato
+        const cantidadIngredientesPlatos = {};
+
+        // Itera sobre todos los platos
+        const platos = await Plato.find();
+
+        for (const plato of platos) {
+            // Inicializa un objeto para almacenar los ingredientes detallados
+            const ingredientesDetallados = {};
+
+            // Itera sobre los ingredientes del plato
+            for (const ingrediente of plato.ingredientes) {
+                // Calcula la cantidad total de cada ingrediente para el número total de usuarios con planes semanales o mensuales
+                const cantidadTotalIngrediente = ingrediente.cantidad * usuarios.length;
+
+                // Almacena los detalles del ingrediente en el objeto
+                ingredientesDetallados[ingrediente.nombre] = cantidadTotalIngrediente + " " + ingrediente.unidad;
+            }
+
+            // Almacena los ingredientes detallados del plato en el objeto principal
+            cantidadIngredientesPlatos[plato.nombre] = ingredientesDetallados;
+        }
+
+        // Envía los detalles de los ingredientes necesarios para cada plato como respuesta
+        res.send(cantidadIngredientesPlatos);
+    } catch (error) {
+        console.log("Error: " + error);
+        res.status(500).send("Error al obtener los detalles de los ingredientes necesarios");
+    }
+});
+
+//Obtiene la dirección de todos los usuarios con algún
+app.get('/obtener-direcciones-usuarios', function (req, res) {
+    Usuario.find({ planActual: { $ne: 'Sin plan' } }, 'direccion')
+        .then(usuarios => {
+            // Extrae solo las direcciones de los usuarios y las envía como respuesta
+            const direcciones = usuarios.map(usuario => usuario.direccion);
+            res.send(direcciones);
+        })
+        .catch(error => {
+            console.error("Error: ", error);
+            res.status(500).send("Error al obtener las direcciones de los usuarios");
+        });
+});

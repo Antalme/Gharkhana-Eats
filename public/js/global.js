@@ -61,3 +61,16 @@ function formatearFechaConDiferencia(fecha) {
 
     return `${fechaFormateada} ${diaSemana} ${diaMes} de ${mes} de ${año}`
 }
+
+//Genera una ruta en google maps
+function generarRuta(direcciones) {
+    const baseUrl = 'https://www.google.com/maps/dir/';
+    var urlFinal = baseUrl
+
+    direcciones.forEach(direccion => {
+        urlFinal += encodeURIComponent(direccion) + "/"
+    });
+
+    //window.open(urlFinal, '_blank');
+    return urlFinal;
+}
