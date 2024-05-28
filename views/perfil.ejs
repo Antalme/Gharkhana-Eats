@@ -18,7 +18,15 @@
                         <hr>
                         <p><b>Nombre de usuario:</b> <%= session.nombreUsuario %></p>
                         <p id="email"><b>Email:</b> <%= session.email %></p>
-                        <p><b>Cambiar contraseña</b></p>
+                        <p id="tituloCambiarContrasena"><b>Cambiar contraseña ▼</b></p>
+                        <div id="contenedorNuevaContrasena" class="escondido">
+                            <input type="password" class="form-control campoPass" id="contraActual"
+                            name="cantidadIngrediente" placeholder="Contraseña actual">
+                            <input type="password" class="form-control campoPass" id="contraNueva"
+                            name="cantidadIngrediente" placeholder="Contraseña nueva">
+                            <button type="button" class="btn campoPass" id="eliminarIngrediente">
+                                <i class="fas fa-key mr-1"></i>Cambiar contraseña</button>
+                        </div>
                         <br>
                         <p id="nombreCompleto"><b>Nombre completo:</b> <%= session.nombreCompleto %></p>
                         <p id="direccion"><b>Dirección de entrega:</b> <%= session.direccion %></p>

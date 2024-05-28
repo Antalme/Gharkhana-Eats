@@ -1,3 +1,26 @@
-.tituloDato{
+.tituloDato {
     font-weight: bold;
+}
+
+.campoPass {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.btn {
+    background-color: var(--color-primario);
+    color: var(--color-fondoPrimario);
+    font-weight: bold;
+}
+
+#tituloCambiarContrasena {
+    cursor: pointer;
+}
+
+#contenedorNuevaContrasena {
+    width: 200px;
+}
+
+.escondido {
+    display: none;
 }

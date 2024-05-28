@@ -367,6 +367,48 @@ app.post('/registro', function (req, res) {
     });
 })
 
+//Maneja el cambio de contraseña.
+app.post('/cambiar-contrasena', function (req, res) {
+    const { passActual, passNueva } = req.body;
+    const idUsuario = req.session.idUsuario; // Obtener el ID del usuario desde la sesión
+
+    console.log(req.session);
+    console.log(passActual, passNueva, idUsuario);
+
+    Usuario.findOne({ _id: idUsuario, pass: passActual })
+        .then(usuario => {
+            if (!usuario) {
+                res.status(401).send({
+                    titulo: "Error de autenticación",
+                    mensaje: "Usuario no encontrado o contraseña actual incorrecta",
+                    tipo: "error"
+                });
+                return;
+            }
+
+            usuario.pass = passNueva;
+
+            return usuario.save();
+        })
+        .then(usuarioActualizado => {
+            if (usuarioActualizado) {
+                res.send({
+                    titulo: "¡Contraseña cambiada con éxito!",
+                    mensaje: "Tu contraseña ha sido cambiada y ya podrás usarla de aquí en adelante",
+                    tipo: "success"
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error: ", error);
+            res.status(500).send({
+                titulo: "Error del servidor",
+                mensaje: "Hubo un error al procesar tu solicitud. Por favor, inténtalo nuevamente más tarde.",
+                tipo: "error"
+            });
+        });
+});
+
 app.get('/obtener-usuarios', function (req, res) {
     Usuario.find().then((resultado) => {
         res.send(resultado)
