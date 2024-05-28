@@ -47,7 +47,6 @@ const upload = multer({ storage: storage });
 mongoose.connect(DB_URI).then((result) => {
     console.log("Conectado correctamente a la BD: " + result)
 
-    //app.listen(puerto, () => {
     app.listen(puerto, hostname, () => {
         console.log("Servidor corriendo por " + hostname + ":" + puerto)
 
@@ -268,9 +267,9 @@ app.post('/webhook', async (req, res) => {
 
 })
 
-// ---------------------------------
-// ----------- API REST ------------
-// ---------------------------------
+// ---------------------------------------------
+// ----------- API REST - ENDPOINTS ------------
+// ---------------------------------------------
 
 
 //[USUARIOS]

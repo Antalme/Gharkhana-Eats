@@ -68,9 +68,8 @@ function generarRuta(direcciones) {
     var urlFinal = baseUrl
 
     direcciones.forEach(direccion => {
-        urlFinal += encodeURIComponent(direccion) + "/"
+        urlFinal += encodeURIComponent(direccion + ", Almería") + "/"
     });
 
-    //window.open(urlFinal, '_blank');
     return urlFinal;
 }
