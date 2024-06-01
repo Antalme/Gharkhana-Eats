@@ -29,6 +29,10 @@ const platoSchema = new mongoose.Schema({
         type: [ingredienteSchema],
         required: true
     },
+    hora: {
+        type: String,
+        required: true
+    },
     imagen: {
         data: Buffer,
         contentType: String

@@ -12,8 +12,10 @@ function BucleGestorCalendario() {
 async function CargarPlatosDelMes() {
     try {
         //Obtiene una lista con la ID de todos los platos.
-        const respuestaPlatos = await axios.get('http://localhost:3000/obtener-platos-ids')
-        const idsPlatos = respuestaPlatos.data.map(plato => plato._id)
+        const platos = await axios.get('http://localhost:3000/obtener-platos-ids')
+
+        const idsPlatosManana = platos.data.almuerzo;
+        const idsPlatosNoches = platos.data.cena;
 
         //Obtiene la lista de los días que ya tienen platos asignados. 
         const respuestaMenus = await axios.get('http://localhost:3000/obtener-menus')
@@ -39,8 +41,8 @@ async function CargarPlatosDelMes() {
             
             //Si no se ha encontrado ningún plato para ese día, lo añade de forma aleatoria (mañana y noche).
             if (!existe) {
-                const platoAleatorioManana = idsPlatos[Math.floor(Math.random() * idsPlatos.length)]
-                const platoAleatorioNoche = idsPlatos[Math.floor(Math.random() * idsPlatos.length)]
+                const platoAleatorioManana = idsPlatosManana[Math.floor(Math.random() * idsPlatosManana.length)]
+                const platoAleatorioNoche = idsPlatosNoches[Math.floor(Math.random() * idsPlatosNoches.length)]
 
                 await axios.post('http://localhost:3000/guardar-menu', {
                     fecha: diaSemana,

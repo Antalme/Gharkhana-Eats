@@ -131,6 +131,7 @@ function cargarDatosPlato(plato) {
     $("#nombrePlato").val(plato.nombre)
     $("#ingredientesPlato").val(plato.ingredientes)
     $("#descripcionPlato").val(plato.descripcion)
+    $('input[name="horaPlato"][value="' + plato.hora + '"]').prop('checked', true);
 
     ingredienteNumero = 0
     for (var i = 0; i < plato.ingredientes.length; i++) {
@@ -202,6 +203,10 @@ function guardarPlato() {
         mostrarMensaje({ titulo: "Descripción no introducida", mensaje: "El plato debe tener una descripción", tipo: "warning" });
         return
     }
+    if (!$("input[name='horaPlato']:checked").val()) {
+        mostrarMensaje({ titulo: "Hora del plato no seleccionada", mensaje: "Debes seleccionar para qué hora del día será el plato", tipo: "warning" });
+        return;
+    }
     if ($("#archivoInput").val() == "") {
         mostrarMensaje({ titulo: "Foto no cargada", mensaje: "Se debe cargar una imagen que represente al plato", tipo: "warning" });
         return
@@ -213,6 +218,7 @@ function guardarPlato() {
     formData.append('idPlato', $("#idPlato").val())
     formData.append('nombrePlato', $("#nombrePlato").val())
     formData.append('descripcionPlato', $("#descripcionPlato").val())
+    formData.append('horaPlato', $('input[name="horaPlato"]:checked').val())
     formData.append('imagen', archivo)
 
     //Obtiene los ingredientes

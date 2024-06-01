@@ -511,10 +511,14 @@ app.post('/eliminar-todos-usuarios', function (req, res) {
 //[PLATOS]
 
 app.get('/obtener-platos', function (req, res) {
-    Plato.find().then((resultado) => {
+    Plato.find().sort({
+        hora: 1,    // Primero ordena por hora, donde 'almuerzo' vendría antes que 'cena'
+        nombre: 1   // Luego ordena alfabéticamente por el campo nombre
+    }).then((resultado) => {
         res.send(resultado)
     }).catch((error) => {
         console.log("Error: " + error)
+        res.status(500).send("Hubo un error al obtener los platos.")
     })
 })
 
@@ -528,21 +532,35 @@ app.get('/obtener-plato', function (req, res) {
     })
 })
 
-//Obtiene las IDs de TODOS los platos
+//Obtiene las IDs de TODOS los platos y los separa en "almuerzo" y "cena".
 app.get('/obtener-platos-ids', function (req, res) {
-    Plato.find({}, '_id')
-        .then(idsPlatos => {
-            res.status(200).json(idsPlatos);
+    Plato.find({ hora: "Almuerzo" }, '_id')
+        .then(idsPlatosAlmuerzo => {
+            // Obtener los platos cuya hora sea "Almuerzo"
+            const almuerzo = idsPlatosAlmuerzo.map(plato => plato._id);
+
+            // Obtener los platos cuya hora sea "Cena"
+            Plato.find({ hora: "Cena" }, '_id')
+                .then(idsPlatosCena => {
+                    const cena = idsPlatosCena.map(plato => plato._id);
+
+                    // Devolver las dos tablas como respuesta
+                    res.status(200).json({ almuerzo, cena });
+                })
+                .catch(error => {
+                    console.error("Error al obtener los IDs de los platos de cena:", error);
+                    res.status(500).json({ error: "Error al obtener los IDs de los platos de cena" });
+                });
         })
         .catch(error => {
-            console.error("Error al obtener los IDs de los platos:", error);
-            res.status(500).json({ error: "Error al obtener los IDs de los platos" });
+            console.error("Error al obtener los IDs de los platos de almuerzo:", error);
+            res.status(500).json({ error: "Error al obtener los IDs de los platos de almuerzo" });
         });
-})
+});
 
 //Guarda el plato usando los datos pasados por parámetros.
 app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
-    var { idPlato, nombrePlato, descripcionPlato, ingredientesPlato } = req.body
+    var { idPlato, nombrePlato, descripcionPlato, horaPlato, ingredientesPlato } = req.body
     ingredientesPlato = JSON.parse(ingredientesPlato)
 
     //Convierte la imagen a un Buffer y obtiene su tipo de contenido
@@ -556,6 +574,7 @@ app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
             .then(platoExistente => {
                 platoExistente.nombre = nombrePlato
                 platoExistente.descripcion = descripcionPlato
+                platoExistente.hora = horaPlato
                 platoExistente.ingredientes = ingredientesPlato
                 platoExistente.imagen.data = req.file.buffer
                 platoExistente.imagen.contentType = req.file.mimetype
@@ -580,6 +599,7 @@ app.post('/guardar-plato', upload.single('imagen'), function (req, res) {
         const nuevoPlato = new Plato({
             nombre: nombrePlato,
             descripcion: descripcionPlato,
+            hora: horaPlato,
             ingredientes: ingredientesPlato,
             imagen: {
                 data: imagenData,
