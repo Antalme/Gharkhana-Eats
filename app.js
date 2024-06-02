@@ -73,7 +73,7 @@ app.use(session({
 }))
 
 // ---------------------------------
-// ---------- Middlewares ----------
+// ---------- MIDDLEWARES ----------
 // ---------------------------------
 
 //Evita que el usuario pase si no tiene la sesión iniciada.
